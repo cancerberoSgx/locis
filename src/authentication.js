@@ -1,8 +1,9 @@
 // authentication : 
 // https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
 
-var jwt = require('jsonwebtoken');
+var jwt = require('jsonwebtoken')
 var dbutils = require('./db')
+var user = require('./db/user')
 
 function registerAuthTools(app, express)
 {
@@ -19,7 +20,7 @@ function registerAuthTools(app, express)
 		.then(function(db_)
 		{
 			db = db_
-			return dbutils.searchUser(db, req.body.name, req.body.password);
+			return user.searchUser(db, req.body.name, req.body.password);
 		})
 		.then(function(users)
 		{

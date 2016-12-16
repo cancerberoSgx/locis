@@ -1,6 +1,7 @@
 var request = require('superagent');
 var utils = require('./testUtils')
 var dbutils = require('../src/db')
+var user = require('../src/db/user')
 
 describe('setup', function()
 {
@@ -13,7 +14,7 @@ describe('setup', function()
 		.then(function(db_)
 		{
 			db = db_;
-			return dbutils.searchUser(db, 'sgurin', 'test123');
+			return user.searchUser(db, 'sgurin', 'test123');
 		})
 		.then(function(users)
 		{
@@ -25,11 +26,11 @@ describe('setup', function()
 			else
 			{
 				console.log('user dont exists, creating it now.')
-				return dbutils
+				return user
 				.insertUser(db, {name: 'sgurin', password: 'test123'})
 				.then(function()
 				{
-					return dbutils.searchUser(db, 'sgurin', 'test123')
+					return user.searchUser(db, 'sgurin', 'test123')
 				})
 			}
 		})

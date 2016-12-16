@@ -37,8 +37,9 @@ Future:
 
 (automatically will start the web server - *make sure isn't one running*)
 
-	npm test
+	killall node; npm test
 
+ * after that npm test will start working
  * mongodb server must be running. 
  * Make sure the server at (http://localhost:3000) is killed first (killall node)
  * Try to execute the tests twice since in the first time a new user is created. 
