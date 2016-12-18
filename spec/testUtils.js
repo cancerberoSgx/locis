@@ -1,5 +1,5 @@
 var request = require('superagent');
-
+var _ = require('underscore')
 module.exports = {
 
 	serverStartup: function(url, expect, cb)
@@ -42,5 +42,13 @@ module.exports = {
 				cb(null); 
 			}); 
 		}, 500)
+	}
+
+,	randomLocationPoint: function(x1, x2, y1, y2)
+	{
+		return [
+			_.random(x1*1000, x2*1000)/1000,
+			_.random(y1*1000, y2*1000)/1000
+		]
 	}
 }

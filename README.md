@@ -37,7 +37,7 @@ Future:
 
 (automatically will start the web server - *make sure isn't one running*)
 
-	killall node; npm test
+	npm test; killall node; 
 
  * after that npm test will start working
  * mongodb server must be running. 

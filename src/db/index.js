@@ -8,102 +8,122 @@ var assert = require('assert')
 
 
 
-var insertDocument = function(db, callback) {
-	return new Promise(function(resolve, reject)
-	{
-		db.collection('restaurants').insertOne( {
-			"address" : {
-			 "street" : "2 Avenue",
-			 "zipcode" : "10075",
-			 "building" : "1480",
-			 "coord" : [ -73.9557413, 40.7720266 ]
-			},
-			"borough" : "Manhattan",
-			"cuisine" : "Italian",
-			"grades" : [
-			 {
-				"date" : new Date("2014-10-01T00:00:00Z"),
-				"grade" : "A",
-				"score" : 11
-			 },
-			 {
-				"date" : new Date("2014-01-16T00:00:00Z"),
-				"grade" : "B",
-				"score" : 17
-			 }
-			],
-			"name" : "Vella",
-			"restaurant_id" : "41704620"
-			}, function(err, result) {
-			assert.equal(err, null);
-			err ? reject(err) : resolve()
-			callback && callback(err);
-		});
-	});  
-};
+// var insertDocument = function(db, callback) {
+// 	return new Promise(function(resolve, reject)
+// 	{
+// 		db.collection('restaurants').insertOne( {
+// 			"address" : {
+// 			 "street" : "2 Avenue",
+// 			 "zipcode" : "10075",
+// 			 "building" : "1480",
+// 			 "coord" : [ -73.9557413, 40.7720266 ]
+// 			},
+// 			"borough" : "Manhattan",
+// 			"cuisine" : "Italian",
+// 			"grades" : [
+// 			 {
+// 				"date" : new Date("2014-10-01T00:00:00Z"),
+// 				"grade" : "A",
+// 				"score" : 11
+// 			 },
+// 			 {
+// 				"date" : new Date("2014-01-16T00:00:00Z"),
+// 				"grade" : "B",
+// 				"score" : 17
+// 			 }
+// 			],
+// 			"name" : "Vella",
+// 			"restaurant_id" : "41704620"
+// 			}, function(err, result) {
+// 			assert.equal(err, null);
+// 			err ? reject(err) : resolve()
+// 			callback && callback(err);
+// 		});
+// 	});  
+// };
 
 
-var findRestaurants = function(db, callback) 
-{
-	return new Promise(function(resolve, reject)
-	{
-		var cursor = db.collection('restaurants').find( );
-		var docs = []
-		cursor.each(function(err, doc) 
-		{
-			assert.equal(err, null);
-			if(err)
-			{	
-				callback && callback(err)
-				reject(err)
-			}
-			if (doc != null) {
-				// console.dir(doc);
-				docs.push(doc);
-			} 
-			else 
-			{
-				callback && callback(null, docs);
-				resolve(docs);    
-			}
-		});
-	});
-};
+// var findRestaurants = function(db, callback) 
+// {
+// 	return new Promise(function(resolve, reject)
+// 	{
+// 		var cursor = db.collection('restaurants').find( );
+// 		var docs = []
+// 		cursor.each(function(err, doc) 
+// 		{
+// 			assert.equal(err, null);
+// 			if(err)
+// 			{	
+// 				callback && callback(err)
+// 				reject(err)
+// 			}
+// 			if (doc != null) {
+// 				// console.dir(doc);
+// 				docs.push(doc);
+// 			} 
+// 			else 
+// 			{
+// 				callback && callback(null, docs);
+// 				resolve(docs);    
+// 			}
+// 		});
+// 	});
+// };
 
-var removeRestaurants = function(db, callback) 
-{
-	return new Promise(function(resolve, reject)
-	{
-		db.collection('restaurants').deleteMany(
-			{ "borough": "Manhattan" },
-			function(err, results) 
-			{
-				err ? reject(err) : resolve(results); 
-				// console.log(results);
-				callback && callback(err, results);
-			}
-		);
-	})
-};
+// var removeRestaurants = function(db, callback) 
+// {
+// 	return new Promise(function(resolve, reject)
+// 	{
+// 		db.collection('restaurants').deleteMany(
+// 			{ "borough": "Manhattan" },
+// 			function(err, results) 
+// 			{
+// 				err ? reject(err) : resolve(results); 
+// 				// console.log(results);
+// 				callback && callback(err, results);
+// 			}
+// 		);
+// 	})
+// };
 
 module.exports = {
 	url: 'mongodb://localhost:27017/test'
-,	insertDocument: insertDocument
-,	findRestaurants: findRestaurants
-,	removeRestaurants: removeRestaurants
 
-// ,	searchUser: searchUser
-// ,	insertUser: insertUser
 ,	connect: function(callback)
 	{
-		var self = this;
-		return new Promise(function(resolve, reject)
+		return new Promise((resolve, reject)=>
 		{
-			MongoClient.connect(self.url, function(err, db) 
+			MongoClient.connect(this.url, (err, db) =>
 			{
 				callback ? callback(err, db) : null;
 				err ? reject(err) : resolve(db)
 			});
 		});
 	}
-};
+
+,	initialize: function(db)
+	{
+		return new Promise((resolve, reject)=>
+		{
+			if(this.initialized)
+			{
+				resolve()
+			}
+			else
+			{
+				require('./place').initialize(db)
+				this.initialized = true;
+				resolve()
+			}
+		})
+	}
+
+,	initialized: false
+
+
+// 	//test please remove in the future
+// ,	insertDocument: insertDocument
+// ,	findRestaurants: findRestaurants
+// ,	removeRestaurants: removeRestaurants
+
+}

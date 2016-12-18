@@ -37,19 +37,19 @@ describe('', function()
 		.catch(coCatch)
 	})
 
-	it('connect insert search', function(cb)
-	{
-		co(function*() 
-		{
-			var db = yield dbutils.connect()
-			yield dbutils.insertDocument(db)
-			var result = yield dbutils.findRestaurants(db)
-			expect(result.length>0).toBe(true)
-			db.close()
-			cb()
-		})
-		.catch(coCatch)
-	})
+	// it('connect insert search', function(cb)
+	// {
+	// 	co(function*() 
+	// 	{
+	// 		var db = yield dbutils.connect()
+	// 		yield dbutils.insertDocument(db)
+	// 		var result = yield dbutils.findRestaurants(db)
+	// 		expect(result.length>0).toBe(true)
+	// 		db.close()
+	// 		cb()
+	// 	})
+	// 	.catch(coCatch)
+	// })
 
 	// //same as before w promises
 	// it('connect insert search', function(cb)

@@ -2,13 +2,13 @@ var assert = require('assert')
 
 var searchUser = function(db, name, password, callback)
 {
-	return new Promise(function(resolve, reject)
+	return new Promise((resolve, reject)=>
 	{
-		var cursor = db.collection('users').find({name: name, password: password});
+		var cursor = db.collection('users').find({name: name, password: password})
 		var docs = []
-		cursor.each(function(err, doc) 
+		cursor.each((err, doc) =>
 		{
-			assert.equal(err, null);
+			assert.equal(err, null)
 			if(err)
 			{	
 				callback && callback(err)
@@ -16,42 +16,39 @@ var searchUser = function(db, name, password, callback)
 			}
 			if (doc != null)
 			{
-				docs.push(doc);
+				docs.push(doc)
 			} 
 			else 
 			{
-				callback && callback(null, docs);
-				resolve(docs);    
+				callback && callback(null, docs)
+				resolve(docs)    
 			}
-		});
-	});
+		})
+	})
 }
 
 var insertUser = function(db, user, callback)
 {
-	return new Promise(function(resolve, reject)
+	return new Promise((resolve, reject)=>
 	{
-		db.collection('users').insertOne( user, function(err, result) 
+		db.collection('users').insertOne( user, (err, result) =>
 		{
-			assert.equal(err, null);
+			assert.equal(err, null)
 			err ? reject(err) : resolve()
-			callback && callback(err);
-		});
+			callback && callback(err)
+		})
 	})
 }
 
 var removeUser = function(db, userId, callback)
 {
-	return new Promise(function(resolve, reject)
+	return new Promise((resolve, reject)=>
 	{
-		db.collection('users').deleteMany(
-			{ "_id": userId},
-			function(err, results) 
-			{
-				err ? reject(err) : resolve(results); 
-				callback && callback(err, results);
-			}
-		);
+		db.collection('users').deleteMany({ "_id": userId},	(err, results) =>
+		{
+			err ? reject(err) : resolve(results) 
+			callback && callback(err, results)
+		})
 	})
 }
 
