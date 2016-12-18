@@ -20,8 +20,11 @@ describe('', function()
 			var db = yield dbutils.connect()
 			yield dbutils.initialize(db)
 
-			console.log(1)
-			for (var i = 0; i < 50; i++) 
+			placedb.removeAll(db)
+
+			console.time('add')
+			var COUNT = 10000
+			for (var i = 0; i < COUNT; i++) 
 			{
 				var place = {
 					location: testUtils.randomLocationPoint(1,50,1,50)
@@ -32,6 +35,9 @@ describe('', function()
 				yield placedb.insert(db, place)
 			}
 
+			console.timeEnd('add')
+
+			console.time('search')
 			var polygon = {
 				type: "Polygon",
 				coordinates: [[
@@ -42,10 +48,10 @@ describe('', function()
 					[0, 0]
 				]]
 			}
-			console.log(3)
 			var results = yield placedb.searchWithin(db, polygon)
-			expect(results.length).toBe(50)
+			expect(results.length).toBe(COUNT)
 
+			console.timeEnd('search')
 			db.close()
 			cb()
 		})

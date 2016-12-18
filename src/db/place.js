@@ -27,7 +27,11 @@ var searchWithin = function(db, geometry)
 {
 	return new Promise((resolve, reject)=>
 	{
-		var cursor = db.collection('places').find( { location: { $geoWithin: { $geometry: geometry } } } )
+		var cursor = db.collection('places').find({ 
+			location: { 
+				$geoWithin: { $geometry: geometry } 
+			}
+		})
 		var docs = []
 		cursor.each((err, doc) =>
 		{
@@ -46,10 +50,14 @@ var searchWithin = function(db, geometry)
 			}
 		})
 	})
-
-	
 }
 
+var removeAll = function(db)
+{
+	var result
+	db.collection('places').deleteMany({})
+	// while((result = db.collection('places').findOneAndDelete({}))){}
+}
 
 var initialize = function(db)
 {
@@ -60,5 +68,6 @@ module.exports = {
 	searchWithin: searchWithin,
 	initialize: initialize,
 	insert: insert,
-	remove: remove
+	remove: remove,
+	removeAll: removeAll
 }
