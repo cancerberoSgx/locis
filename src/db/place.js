@@ -56,7 +56,6 @@ var removeAll = function(db)
 {
 	var result
 	db.collection('places').deleteMany({})
-	// while((result = db.collection('places').findOneAndDelete({}))){}
 }
 
 var initialize = function(db)

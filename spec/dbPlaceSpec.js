@@ -20,10 +20,12 @@ describe('', function()
 			var db = yield dbutils.connect()
 			yield dbutils.initialize(db)
 
+			console.time('remove')
 			placedb.removeAll(db)
+			console.timeEnd('remove')
 
 			console.time('add')
-			var COUNT = 10000
+			var COUNT = 100
 			for (var i = 0; i < COUNT; i++) 
 			{
 				var place = {

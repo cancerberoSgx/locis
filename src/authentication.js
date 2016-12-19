@@ -47,22 +47,6 @@ function registerAuthTools(app, express)
 			db.close()
 			res.json({success: false, message: JSON.stringify(ex)})
 		})
-		// if( !req.body.name || !req.body.password || req.body.name!=='sg' || req.body.password!=='test123')
-		// {
-		// 	res.json({ success: false, message: 'Authentication failed. User not found.' })
-		// }
-		// else
-		// {
-		// 	var payload = {}
-		// 	payload[req.body.name] = req.body.password; 
-		// 	var token = jwt.sign(payload, 'superSecret');
-		// 	// return the information including token as JSON
-		// 	res.json({
-		// 		success: true,
-		// 		message: 'Enjoy your token!',
-		// 		token: token
-		// 	});
-		// }
 	});
 
 	// route middleware to verify a token
