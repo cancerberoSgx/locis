@@ -2,7 +2,37 @@ locis == "places" in latin
 
 similar to google places but more colaborative and categorized content. Some high level characteristics
 
-### initial description of the problem to solve
+
+#Install: 
+
+	npm install
+
+#starting the services server : 
+
+	node bin/www
+
+#running mongodb server
+
+	mkdir /tmp/dbtest1; mongod --dbpath /tmp/dbtest1
+
+#running html web app server
+
+	node build/devel.js #for development - w watch
+	node build/production.js #for production - minified, port 80
+
+
+#running tests 
+
+(automatically will start the web server - *make sure isn't one running*)
+
+	npm test; killall node; 
+
+ * after that npm test will start working
+ * mongodb server must be running. 
+ * Make sure the server at (http://localhost:3000) is killed first (killall node)
+ * Try to execute the tests twice since in the first time a new user is created. 
+
+# initial description of the problem to solve
 
  * The idea is to have an API for 'categorized places' in a map
  * with rich geospatial queries
@@ -21,30 +51,8 @@ Future:
  * investigate formats for import/export from public data (streets, etc.)
  * Dynamic places. Imagine that in some cities, public transport support an open API for the position of its vehicles. I want to develop a plugin to connect to that information and associate a Place with a handler that trigger position:changed event. 
 
-##Install: 
 
-	npm install
-
-##starting the server : 
-
-	node bin/www
-
-##running mongodb server
-
-	mkdir /tmp/dbtest1; mongod --dbpath /tmp/dbtest1
-
-##running tests 
-
-(automatically will start the web server - *make sure isn't one running*)
-
-	npm test; killall node; 
-
- * after that npm test will start working
- * mongodb server must be running. 
- * Make sure the server at (http://localhost:3000) is killed first (killall node)
- * Try to execute the tests twice since in the first time a new user is created. 
-
-##Calling the API
+#Calling the services API
 
 See spec/test1Spec.js - it will turn on the server, ask for a web token, and call the API using that webtoken. An example using superagent
 
@@ -86,7 +94,7 @@ See spec/test1Spec.js - it will turn on the server, ask for a web token, and cal
 	});
 
 
-##Tecnhnologies used
+#Tecnhnologies used
 
 we choosed the following technologies: 
 
