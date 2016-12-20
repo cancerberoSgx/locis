@@ -9,7 +9,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel-preset-es2015": "^6.14.0"
+    "babel-preset-es2015": "^6.14.0",
+    "less": "^2.7.1",
+    "shelljs": "^0.7.5",
+    "static-server": "^2.0.3",
+    "watch": "^1.0.1"
   },
   "dependencies": {
     "zepto": "^1.2.0"

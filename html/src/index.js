@@ -1,8 +1,6 @@
-// var $ = require('./lib/zepto')
-// var googleMap = require('./lib/google-map')
 
 import $ from './lib/zepto'
-import googleMap from './lib/google-map'
+import google from './lib/google'
 
 function drawMap()
 {
@@ -10,9 +8,30 @@ function drawMap()
 	var markers = [];
 	var path = new google.maps.MVCArray;
 
+	function getLocation(fn) 
+	{
+		if (navigator.geolocation) 
+		{
+			navigator.geolocation.getCurrentPosition(fn);
+		} 
+		else 
+		{
+			fn()
+		}
+	}
 	function initialize() 
 	{
-		var uluru = new google.maps.LatLng(-25.344, 131.036);
+		$('body').append('<div id="map" style="width: 480; height: 480;"></div>')
+		getLocation((position)=>
+		{
+			var coords = position?position.coords:{latitude: -25.344, longitude: 131.036}
+			drawMap(coords)
+		})
+	}
+
+	function drawMap(coords)
+	{
+		var uluru = new google.maps.LatLng(coords.latitude, coords.longitude);
 
 		map = new google.maps.Map(document.getElementById("map"), {
 			zoom: 14,
@@ -56,5 +75,11 @@ function drawMap()
 			path.setAt(i, marker.getPosition());
 		});
 	}
+	initialize()
 }
-alert($('body').html())
+
+$(document).on('ready', function()
+{
+	drawMap()
+})
+// alert($('body').html())

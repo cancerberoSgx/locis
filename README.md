@@ -100,3 +100,20 @@ for developing/tests we use:
  * superagent
  * jasmine
 
+
+
+#ideas
+
+##idea customizable 
+a map/categorized customizable experience. Example requirements:
+
+ * I want to publish a map with recicle containers in the street and different residue types (plastic, aluminium) as colors and places pages. 
+
+ * I want to make it an 'independent product' so it has an url like locis.com/sites/montevideo-recycle
+
+I, as administrator I'm able to: 
+
+ * add new places
+ * categories (categories == residue type)
+ * share the product or make it public - availability
+ * nice to have : relayout the UI compinents ONLINE: customize styles, change templates, menu... (idea inside this: make a framework that allows this agnostically as possible)
