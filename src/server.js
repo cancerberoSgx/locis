@@ -5,6 +5,11 @@ var getContentType = require('./mime-types').getFromFilePath
 
 var authentication = require('./authentication')
 
+var readJSONBody = require('./util').readJSONBody
+var jsonResponse = require('./util').jsonResponse
+
+
+// server startup 
 function createServerAndListen(fn)
 {
 	var https = isProduction ? require('https') : require('http')
@@ -26,6 +31,7 @@ function createServerAndListen(fn)
 	return server
 }
 
+// resolve and read requested file from fs
 function getFile(request)
 {
 	if(request.url == '/')
@@ -48,6 +54,10 @@ function getFile(request)
 		return {error: ex}
 	}
 }
+
+
+
+// APIS - TODO: move this to another folder
 
 //if url starts with /api then we consider it an api call - we authenticate it - if not we assume it's a local file
 function parseApiCall(request)
@@ -92,45 +102,15 @@ function installApis()
 		jsonResponse(response, data, 200)
 	}
 }
-function getApis(){return apis}
-
-function jsonResponse(response, obj, status)
+function getApis()
 {
-	status = status || 200
-	var s = JSON.stringify(obj)
-	response.writeHead(200, {
-		'Content-Type': 'application/json', 
-		'Content-Length': s.length
-	})
-	response.end(s)
+	return apis
 }
 
-function readJSONBody(request)
-{
-	return new Promise(function(resolve, reject)
-	{
-		var body = []
-		request
-		.on('data', function(chunk) 
-		{
-			body.push(chunk)
-		})
-		.on('end', function() 
-		{
-			body = Buffer.concat(body).toString()
-			try 
-			{
-				request.body = JSON.parse(body)
-				resolve(request)
-			}
-			catch(ex)
-			{
-				reject(ex)
-			}
-		})
-	})
-	
-}
+
+
+
+
 
 
 
@@ -146,7 +126,6 @@ var defaultFile = '/index.html'
 
 function startServer(options)
 {
-
 	isProduction = options.isProduction || false
 	baseFolder = options.baseFolder || 'html'
 	defaultFile = options.defaultFile || '/index.html'

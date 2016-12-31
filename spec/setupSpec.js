@@ -20,12 +20,12 @@ describe('setup', function()
 		{
 			if(users && users.length)
 			{
-				console.log('user already exists')
+				// console.log('user already exists')
 				return new Promise(function(resolve){resolve(users)}); 
 			}
 			else
 			{
-				console.log('user dont exists, creating it now.')
+				// console.log('user dont exists, creating it now.')
 				return user
 				.insertUser(db, {name: 'sgurin', password: 'test123'})
 				.then(function()

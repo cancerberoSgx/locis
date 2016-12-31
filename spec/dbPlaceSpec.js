@@ -22,7 +22,7 @@ describe('', function()
 
 			console.time('remove')
 			placedb.removeAll(db)
-			console.timeEnd('remove')
+			// console.timeEnd('remove')
 
 			console.time('add')
 			var COUNT = 100
@@ -37,7 +37,7 @@ describe('', function()
 				yield placedb.insert(db, place)
 			}
 
-			console.timeEnd('add')
+			// console.timeEnd('add')
 
 			console.time('search')
 			var polygon = {
@@ -53,7 +53,7 @@ describe('', function()
 			var results = yield placedb.searchWithin(db, polygon)
 			expect(results.length).toBe(COUNT)
 
-			console.timeEnd('search')
+			// console.timeEnd('search')
 			db.close()
 			cb()
 		})
