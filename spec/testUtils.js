@@ -1,4 +1,4 @@
-var request = require('superagent');
+var request = require('superagent')
 var _ = require('underscore')
 module.exports = {
 
@@ -7,41 +7,44 @@ module.exports = {
 		//make sure is turned off
 		request.get(url).end(function(err, res)
 		{
-			expect(res).toBe(undefined); 
+			expect(res).toBe(undefined) 
 			expect(err.toString().indexOf('ECONNREFUSED')!==-1).toBe(true)
-		}); 
+		}) 
 
-		var spawn = require('child_process').spawn;
-		var server = spawn('node', ['bin/www']);
+		var spawn = require('child_process').spawn
+		var server = spawn('node', ['bin/www'])
 
 		server.stdout.on('data', (data) => 
 		{
+			console.log(`stdout: ${data}`)
+		})
+		server.stderr.on('data', (data) => 
+		{
 			console.log(`stdout: ${data}`);
 		});
-
 		//turn it on
 		setTimeout(function()
 		{
 			request.get(url).end(function(err, res)
 			{
-				expect(!!err).toBe(false);
+				expect(!!err).toBe(false)
 				cb(null, server)
 				// fn(server)
 			})
-		}, 500); 
+		}, 500) 
 	}
 
 ,	serverStop: function(url, expect, server, cb)
 	{
-		server.kill(); 
+		server.kill() 
 		setTimeout(function()
 		{
 			request.get(url).end(function(err, res)
 			{
-				expect(res).toBe(undefined); 
-				expect(err.toString().indexOf('ECONNREFUSED')!==-1).toBe(true); 
-				cb(null); 
-			}); 
+				expect(res).toBe(undefined) 
+				expect(err.toString().indexOf('ECONNREFUSED')!==-1).toBe(true) 
+				cb(null) 
+			}) 
 		}, 500)
 	}
 

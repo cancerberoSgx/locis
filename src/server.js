@@ -5,8 +5,10 @@ var getContentType = require('./mime-types').getFromFilePath
 
 var authentication = require('./authentication')
 
-var readJSONBody = require('./util').readJSONBody
+var util = require('./util')
+// var util.readJSONBody = require('./util').util.readJSONBody
 var jsonResponse = require('./util').jsonResponse
+var parseUrlParameters = require('./util').parseUrlParameters
 
 
 // server startup 
@@ -31,31 +33,6 @@ function createServerAndListen(fn)
 	return server
 }
 
-// resolve and read requested file from fs
-function getFile(request)
-{
-	if(request.url == '/')
-	{
-		request.url = defaultFile
-	}
-	try
-	{
-		var filePath = path.join(baseFolder, request.url)
-		//TODO : security ! compare path.results against basefolder and make sure it is inside !
-		var stat = fs.statSync(filePath)
-		return {
-			stat: stat,
-			path: filePath,
-			contentType: getContentType(filePath)
-		}
-	}
-	catch(ex)
-	{
-		return {error: ex}
-	}
-}
-
-
 
 // APIS - TODO: move this to another folder
 
@@ -71,23 +48,6 @@ function parseApiCall(request)
 			params: parseUrlParameters(request)
 		}
 	}
-}
-function parseUrlParameters(request)
-{
-	var url = request.url
-	var a = url.indexOf('?')
-	var result = {}
-	if(a!=-1)
-	{
-		url = url.substring(a + 1, url.length)
-		a = url.split('&')
-		a.forEach((b) =>
-		{
-			c = b.split('='); 
-			result[c[0]] = c[1]; 
-		})
-	}
-	return result;
 }
 
 var apis = {}
@@ -137,7 +97,7 @@ function startServer(options)
 		//post /authenticate i for obtaining jsonweb token
 		if(request.url=='/api/authenticate')
 		{
-			readJSONBody(request).then(()=>
+			util.readJSONBody(request).then(()=>
 			{
 				// jsonResponse(response, {foo: 'bar'}) ;return;
 				authentication.authenticateHandler(request, response, (data)=>
@@ -181,7 +141,7 @@ function startServer(options)
 		//then it is a static file
 		if(!apiCall)
 		{
-			var file = getFile(request)
+			var file = util.getFile(request, defaultFile)
 			
 			if(!file.error && file.stat.isFile())
 			{
