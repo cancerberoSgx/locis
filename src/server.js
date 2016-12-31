@@ -10,6 +10,11 @@ var util = require('./util')
 var jsonResponse = require('./util').jsonResponse
 var parseUrlParameters = require('./util').parseUrlParameters
 
+var api = require('./api')
+	// api.parseApiCall: api.parseApiCall,
+	// api.installApis: api.installApis,
+	// api.getApis: api.getApis
+
 
 // server startup 
 function createServerAndListen(fn)
@@ -34,45 +39,6 @@ function createServerAndListen(fn)
 }
 
 
-// APIS - TODO: move this to another folder
-
-//if url starts with /api then we consider it an api call - we authenticate it - if not we assume it's a local file
-function parseApiCall(request)
-{
-	var regex = /^\/api\/([^\?]+)/
-	var result = regex.exec(request.url)
-	if(result)
-	{
-		return {
-			action: result[1], 
-			params: parseUrlParameters(request)
-		}
-	}
-}
-
-var apis = {}
-function installApis()
-{
-	apis.utility1 = function(request, response)
-	{
-		var data = {
-			success: true,
-			result: 123123
-		}
-		jsonResponse(response, data, 200)
-	}
-}
-function getApis()
-{
-	return apis
-}
-
-
-
-
-
-
-
 
 
 // SERVER STARTUP
@@ -90,7 +56,7 @@ function startServer(options)
 	baseFolder = options.baseFolder || 'html'
 	defaultFile = options.defaultFile || '/index.html'
 
-	installApis()
+	api.installApis()
 	
 	createServerAndListen((request, response) => 
 	{
@@ -113,7 +79,7 @@ function startServer(options)
 		}
 
 		//then if starts with /api/* it is a api cal that must be authenticated. 
-		var apiCall = parseApiCall(request)
+		var apiCall = api.parseApiCall(request)
 		if(apiCall)
 		{
 			request.query = request.query || apiCall.params
@@ -126,14 +92,14 @@ function startServer(options)
 				{
 					jsonResponse(response, err, err.status||200)
 				}
-				else if(!apiCall.action || !getApis()[apiCall.action])
+				else if(!apiCall.action || !api.getApis()[apiCall.action])
 				{
 					// console.log('api NOT found', apiCall)
 					jsonResponse(response, {error: 'api not found'}, 404)
 				}
 				else
 				{
-					getApis()[apiCall.action](request, response, apiCall)
+					api.getApis()[apiCall.action](request, response, apiCall)
 				}
 			})
 		}
