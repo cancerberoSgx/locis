@@ -2,4 +2,4 @@
 
 var util = require('./util')
 
-util.compileAll( ()=>{util.startServer()} )
+util.compileAll( ()=>{util.startServer2()} )

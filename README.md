@@ -32,6 +32,10 @@ similar to google places but more colaborative and categorized content. Some hig
  * Make sure the server at (http://localhost:3000) is killed first (killall node)
  * Try to execute the tests twice since in the first time a new user is created. 
 
+##run a single test
+
+	node spec --test test1Spec.js
+
 # initial description of the problem to solve
 
  * The idea is to have an API for 'categorized places' in a map

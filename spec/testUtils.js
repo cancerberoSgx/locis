@@ -14,9 +14,10 @@ module.exports = {
 		var spawn = require('child_process').spawn;
 		var server = spawn('node', ['bin/www']);
 
-		// server.stdout.on('data', (data) => {
-		// 	console.log(`stdout: ${data}`);
-		// });
+		server.stdout.on('data', (data) => 
+		{
+			console.log(`stdout: ${data}`);
+		});
 
 		//turn it on
 		setTimeout(function()

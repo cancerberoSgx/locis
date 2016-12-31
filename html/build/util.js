@@ -65,6 +65,25 @@ function startServer(options, fn)
 	});
 }
 
+function startServer2(options, fn)
+{
+	var https = require('https');
+	var fs = require('fs');
+
+	var options = {
+		key: shell.cat('html/hacksparrow.pem'), //fs.readFileSync('key.pem'),
+		cert: shell.cat('html/hacksparrow.pem') //fs.readFileSync('cert.pem')
+	};
+
+	var a = https.createServer(options, function (req, res) 
+	{
+		res.writeHead(200);
+		res.end("hello world\n");
+	})
+	.listen(8000);
+	fn && fn();
+}
+
 function compileAll(fn)
 {
 	compileJavaScript(function(){compileLess(fn)})
@@ -75,6 +94,7 @@ module.exports = {
 	compileAll: compileAll,
 	startServer: startServer,
 	compileJavaScript: compileJavaScript,
-	compileLess: compileLess
+	compileLess: compileLess,
+	startServer2: startServer2
 }
 
