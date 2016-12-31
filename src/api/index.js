@@ -1,4 +1,4 @@
-
+var util = require('../util')
 // APIS - TODO: move this to another folder
 
 //if url starts with /api then we consider it an api call - we authenticate it - if not we assume it's a local file
@@ -10,7 +10,7 @@ function parseApiCall(request)
 	{
 		return {
 			action: result[1], 
-			params: parseUrlParameters(request)
+			params: util.parseUrlParameters(request)
 		}
 	}
 }
@@ -24,7 +24,7 @@ function installApis()
 			success: true,
 			result: 123123
 		}
-		jsonResponse(response, data, 200)
+		util.jsonResponse(response, data, 200)
 	}
 }
 function getApis()
