@@ -3,13 +3,6 @@ var utils = require('./testUtils')
 var dbutils = require('../src/db')
 var co = require('co')
 
-var coCatch = function(err)
-{
-	expect(err).toBe(undefined)
-	console.log('DB connection ERROR: ', err)
-	cb()
-}
-
 describe('', function()
 {
 	it('connect callback', function(cb)
@@ -21,7 +14,7 @@ describe('', function()
 			db.close()
 			cb()
 		})
-		.catch(coCatch)
+		.catch(utils.coCatch(cb))
 	})
 
 	it('connect promise', function(cb)
@@ -34,7 +27,7 @@ describe('', function()
 			db.close()
 			cb()
 		})
-		.catch(coCatch)
+		.catch(utils.coCatch(cb))
 	})
 
 	// it('connect insert search', function(cb)
@@ -48,7 +41,7 @@ describe('', function()
 	// 		db.close()
 	// 		cb()
 	// 	})
-	// 	.catch(coCatch)
+	// 	.catch(utils.coCatch(cb))
 	// })
 
 	// //same as before w promises
@@ -108,9 +101,5 @@ describe('', function()
 
 
 
-
-
-
-	
 
 })

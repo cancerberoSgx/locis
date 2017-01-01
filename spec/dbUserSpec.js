@@ -1,14 +1,7 @@
-
 var dbutils = require('../src/db')
 var userdb = require('../src/db/user')
+var utils = require('./testUtils')
 var co = require('co')
-
-var coCatch = function(err)
-{
-	expect(err).toBe(undefined)
-	console.log('DB connection ERROR: ', err)
-	cb()
-}
 
 describe('', function()
 {
@@ -33,6 +26,6 @@ describe('', function()
 			db.close()
 			cb()
 		})
-		.catch(coCatch)
+		.catch(utils.coCatch(cb))
 	})
 })

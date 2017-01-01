@@ -1,11 +1,9 @@
-var request = require('superagent');
-var utils = require('./testUtils')
 var dbutils = require('../src/db')
 var user = require('../src/db/user')
 
 describe('setup', function()
 {
-	var db, dontExists = true;
+	var db
 
 	it('check if user already exists', function(cb)
 	{
@@ -13,15 +11,15 @@ describe('setup', function()
 		.connect()
 		.then(function(db_)
 		{
-			db = db_;
-			return user.searchUser(db, 'sgurin', 'test123');
+			db = db_
+			return user.searchUser(db, 'sgurin', 'test123')
 		})
 		.then(function(users)
 		{
 			if(users && users.length)
 			{
 				// console.log('user already exists')
-				return new Promise(function(resolve){resolve(users)}); 
+				return new Promise(function(resolve){resolve(users)}) 
 			}
 			else
 			{
@@ -36,16 +34,16 @@ describe('setup', function()
 		})
 		.then(function(users)
 		{
-			expect(users && users.length>0).toBe(true);
+			expect(users && users.length>0).toBe(true)
 			db.close()
-			cb();
+			cb()
 		})
 		.catch(function(ex)
 		{
 			console.log('error', ex)
 			db.close()
-			cb();
-		});
-	});
+			cb()
+		})
+	})
 
 })

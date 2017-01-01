@@ -1,20 +1,20 @@
-var request = require('superagent');
+var request = require('superagent')
 var utils = require('./testUtils')
 
 
 describe('basic auth - utility1', function()
 {
-	var server; 
+	var server 
 
 	it('server startup', function(cb)
 	{
 		utils.serverStartup('http://localhost:3000', expect, function(error, server_)
 		{
-			server = server_;
-			expect(!!error).toBe(false); 
-			cb(); 
+			server = server_
+			expect(!!error).toBe(false) 
+			cb() 
 		})
-	}); 
+	}) 
 
 	it('/api/authenticate w no credentials', function(cb)
 	{
@@ -26,11 +26,11 @@ describe('basic auth - utility1', function()
 			expect(err).toBeFalsy()
 			if(!err)
 			{
-				expect(res.body.success).toBeFalsy(); //bad credentials
+				expect(res.body.success).toBeFalsy() //bad credentials
 			}
-			cb();
-		});
-	}); 
+			cb()
+		})
+	}) 
 	it('/api/authenticate w wrong credentials', function(cb)
 	{
 		request
@@ -41,13 +41,13 @@ describe('basic auth - utility1', function()
 			expect(err).toBeFalsy()
 			if(!err)
 			{
-				expect(res.body.success).toBeFalsy(); //bad credentials
+				expect(res.body.success).toBeFalsy() //bad credentials
 			}
-			cb();
-		});
-	}); 
+			cb()
+		})
+	}) 
 
-	var goodToken;
+	var goodToken
 
 	it('happypath1', function(cb)
 	{
@@ -60,7 +60,7 @@ describe('basic auth - utility1', function()
 			.end(function(err, res)
 			{
 				expect(err).toBeFalsy()
-				err ? reject(err) : resolve(res.body.token);
+				err ? reject(err) : resolve(res.body.token)
 			})
 		})
 		.then(function(token)
@@ -73,9 +73,9 @@ describe('basic auth - utility1', function()
 				.set('x-access-token', token)
 				.end(function(err, res)
 				{
-					err ? reject(err) : resolve(res.body.result);
-				});
-			});
+					err ? reject(err) : resolve(res.body.result)
+				})
+			})
 		})
 		.then(function(result)
 		{
@@ -87,9 +87,9 @@ describe('basic auth - utility1', function()
 		{
 			console.log('ERROR', err.toString())
 			cb()
-		});
+		})
 
-	});
+	})
 
 
 
@@ -98,10 +98,10 @@ describe('basic auth - utility1', function()
 	{
 		utils.serverStop('http://localhost:3000', expect, server, function(error)
 		{
-			expect(!!error).toBe(false); 
-			cb(); 
-		});
-	});
+			expect(!!error).toBe(false) 
+			cb() 
+		})
+	})
 })
 
 
@@ -146,14 +146,14 @@ describe('basic auth - utility1', function()
 // 		.end(function(err, res)
 // 		{
 // 			// console.log('SKJSHKJHKJH',err.toString())
-// 			debugger;
-// 			expect(!!err).toBe(false);
-// 			expect(res.body.success).toBe(true); 
-// 			expect(res.body.token.length>0).toBe(true); 
-// 			goodToken = res.body.token;
-// 			cb();
-// 		});
-// 	}); 
+// 			debugger
+// 			expect(!!err).toBe(false)
+// 			expect(res.body.success).toBe(true) 
+// 			expect(res.body.token.length>0).toBe(true) 
+// 			goodToken = res.body.token
+// 			cb()
+// 		})
+// 	}) 
 
 // 	it('/api/authenticate w bad credentials', function(cb)
 // 	{
@@ -162,10 +162,10 @@ describe('basic auth - utility1', function()
 // 		.send({name: 'sgurin', password: 'wrongnumber'})
 // 		.end(function(err, res)
 // 		{
-// 			expect(res.body.success).toBe(false); 
-// 			cb();
-// 		});
-// 	}); 
+// 			expect(res.body.success).toBe(false) 
+// 			cb()
+// 		})
+// 	}) 
 
 // 	it('/api/utility1 w no token', function(cb)
 // 	{
@@ -173,10 +173,10 @@ describe('basic auth - utility1', function()
 // 		.get('http://localhost:3000/api/utility1')
 // 		.end(function(err, res)
 // 		{
-// 			expect(res.body.success).toBe(false);
-// 			cb();
-// 		});
-// 	}); 
+// 			expect(res.body.success).toBe(false)
+// 			cb()
+// 		})
+// 	}) 
 
 // 	it('/api/utility1 w good token', function(cb)
 // 	{
@@ -185,11 +185,11 @@ describe('basic auth - utility1', function()
 // 		.set('x-access-token', goodToken)
 // 		.end(function(err, res)
 // 		{
-// 			expect(res.body.success).toBe(true); 
+// 			expect(res.body.success).toBe(true) 
 // 			expect(res.body.result).toBeDefined()
-// 			cb();
-// 		});
-// 	}); 
+// 			cb()
+// 		})
+// 	}) 
 
 // 	it('/api/utility1 w bad token', function(cb)
 // 	{
@@ -199,10 +199,10 @@ describe('basic auth - utility1', function()
 // 		.end(function(err, res)
 // 		{
 // 			expect(!!err).toBe(false)
-// 			expect(res.body.success).toBe(false);
-// 			cb();
-// 		});
-// 	}); 
+// 			expect(res.body.success).toBe(false)
+// 			cb()
+// 		})
+// 	}) 
 
 
 
@@ -221,11 +221,11 @@ describe('basic auth - utility1', function()
 // 				.send({name: 'sgurin', password: 'test123'})
 // 				.end(function(err, res)
 // 				{
-// 					err ? reject(err) : resolve(res.body.token);
+// 					err ? reject(err) : resolve(res.body.token)
 // 				})
-// 		});
+// 		})
 
-// 		console.log('token obtained', token);
+// 		console.log('token obtained', token)
 
 // 		var result = yield new Promise(function(resolve, reject)
 // 		{
@@ -234,30 +234,30 @@ describe('basic auth - utility1', function()
 // 			.set('x-access-token', token)
 // 			.end(function(err, res)
 // 			{
-// 				err ? reject(err) : resolve(res.body.result);
-// 			});
-// 		});
+// 				err ? reject(err) : resolve(res.body.result)
+// 			})
+// 		})
 
 // 		// var result = yield request
 // 		// 	.get('http://localhost:3000/api/utility1')
 // 		// 	.set('x-access-token', token)
 // 		// 	.end(function(err, res)
 // 		// 	{
-// 		// 		// err ? reject(err) : resolve(res.body.result);
-// 		// 	});
+// 		// 		// err ? reject(err) : resolve(res.body.result)
+// 		// 	})
 
-// 		// console.log('result obtained', result);
+// 		// console.log('result obtained', result)
 
 // 		expect(result).toBe(123123)
 
-// 		cb();
+// 		cb()
 // 	})
 // 	.catch(function(err) 
 // 	{
-// 		expect(err).toBe(undefined); 
-// 		console.log(err.stack);
+// 		expect(err).toBe(undefined) 
+// 		console.log(err.stack)
 // 		cb()
-// 	});
+// 	})
 
 // })
 	
@@ -273,11 +273,11 @@ describe('basic auth - utility1', function()
 // // 				.send({name: 'sgurin', password: 'test123'})
 // // 				.end(function(err, res)
 // // 				{
-// // 					err ? cb(err) : cb(res.body.token);
+// // 					err ? cb(err) : cb(res.body.token)
 // // 				})
 // // 		}
 
-// // 		console.log('token obtained', token);
+// // 		console.log('token obtained', token)
 
 // // 		var result = yield function(cb)
 // // 		{
@@ -286,8 +286,8 @@ describe('basic auth - utility1', function()
 // // 			.set('x-access-token', token)
 // // 			.end(function(err, res)
 // // 			{
-// // 				err ? cb(err) : cb(res.body.result);
-// // 			});
+// // 				err ? cb(err) : cb(res.body.result)
+// // 			})
 // // 		}
 
 // // 		// var result = yield request
@@ -295,21 +295,21 @@ describe('basic auth - utility1', function()
 // // 		// 	.set('x-access-token', token)
 // // 		// 	.end(function(err, res)
 // // 		// 	{
-// // 		// 		// err ? reject(err) : resolve(res.body.result);
-// // 		// 	});
+// // 		// 		// err ? reject(err) : resolve(res.body.result)
+// // 		// 	})
 
-// // 		// console.log('result obtained', result);
+// // 		// console.log('result obtained', result)
 
 // // 		expect(result).toBe(123123)
 
-// // 		cb2();
+// // 		cb2()
 // // 	})
 // // 	.catch(function(err) 
 // // 	{
-// // 		expect(err).toBe(undefined); 
-// // 		console.log(err.stack);
+// // 		expect(err).toBe(undefined) 
+// // 		console.log(err.stack)
 // // 		cb2()
-// // 	});
+// // 	})
 
 // // })
 

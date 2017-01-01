@@ -7,6 +7,7 @@ var user = require('./db/user')
 
 function authenticateHandler(req, res, fn)
 {
+	var db
 	dbutils.connect()
 	.then(function(db_)
 	{
@@ -95,8 +96,6 @@ function registerAuthTools(app, express)
 {
 	// get an instance of the router for api routes
 	var apiRoutes = express.Router() 
-
-	var db
 
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	apiRoutes.post('/authenticate', authenticateHandler)

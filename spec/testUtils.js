@@ -21,7 +21,7 @@ module.exports = {
 		server.stderr.on('data', (data) => 
 		{
 			console.log(`stdout: ${data}`);
-		});
+		})
 		//turn it on
 		setTimeout(function()
 		{
@@ -54,5 +54,15 @@ module.exports = {
 			_.random(x1*1000, x2*1000)/1000,
 			_.random(y1*1000, y2*1000)/1000
 		]
+	}
+
+,	coCatch: function(cb)
+	{
+		return function(err)
+		{
+			expect(err).toBe(undefined)
+			console.log('DB connection ERROR: ', err)
+			cb()
+		}
 	}
 }

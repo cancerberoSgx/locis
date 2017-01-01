@@ -1,15 +1,7 @@
-
 var dbutils = require('../src/db')
 var placedb = require('../src/db/place')
 var testUtils = require('./testUtils')
 var co = require('co')
-
-var coCatch = function(err)
-{
-	expect(err).toBe(undefined)
-	console.log('DB connection ERROR: ', err)
-	cb()
-}
 
 describe('', function()
 {
@@ -41,7 +33,7 @@ describe('', function()
 
 			console.time('search')
 			var polygon = {
-				type: "Polygon",
+				type: 'Polygon',
 				coordinates: [[
 					[0, 0],
 					[0, size+1],
@@ -57,6 +49,6 @@ describe('', function()
 			db.close()
 			cb()
 		})
-		.catch(coCatch)
+		.catch(testUtils.coCatch(cb))
 	})
 })
