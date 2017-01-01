@@ -19,7 +19,7 @@ function parseApiCall(request)
 
 function installApis()
 {
-	registerApi('utility1', require('./utility1'))
+	registerApi(require('./utility1'))
 }
 
 function getApis()
@@ -27,9 +27,9 @@ function getApis()
 	return apis
 }
 
-function registerApi(name, handler)
+function registerApi(obj)
 {
-	apis[name] = handler
+	apis[obj.name] = obj.handler
 }
 
 module.exports = {

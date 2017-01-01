@@ -1,9 +1,12 @@
 var util = require('../util')
-module.exports = function(request, response)
-{
-	var data = {
-		success: true,
-		result: 123123
+module.exports = {
+	name: 'utility1',
+	handler: (request, response)=>
+	{
+		var data = {
+			success: true,
+			result: 123123
+		}
+		util.jsonResponse(response, data, 200)
 	}
-	util.jsonResponse(response, data, 200)
 }

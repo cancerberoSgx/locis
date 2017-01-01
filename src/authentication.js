@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken')
 var dbutils = require('./db')
 var user = require('./db/user')
 
-function authenticateHandler2(req, res, fn)
+function authenticateHandler(req, res, fn)
 {
 	dbutils.connect()
 	.then(function(db_)
@@ -18,7 +18,6 @@ function authenticateHandler2(req, res, fn)
 		db.close()
 		if(!users || !users.length)
 		{
-
 			// console.log('no users for', req.body.name)
 			fn({ 
 				success: false, 
@@ -29,14 +28,14 @@ function authenticateHandler2(req, res, fn)
 		{
 			var payload = {}
 			payload[req.body.name] = req.body.password
-			// console.log('payload', payload)
 
 			var token = jwt.sign(payload, 'superSecret')
 			// return the information including token as JSON
 			fn({
 				success: true,
 				message: 'Enjoy your token!',
-				token: token
+				token: token,
+				user: user
 			})
 		}
 	})
@@ -54,13 +53,13 @@ function authenticateHandler2(req, res, fn)
 	})
 }
 
-var authenticateMiddleware2 = function(req, res, fn)
+var authenticateMiddleware = function(req, res, fn)
 {
 	var token = req.body.token || req.query.token || req.headers['x-access-token']
 	if (token) 
 	{
 		// verifies secret and checks exp
-		jwt.verify(token, 'superSecret', function(err, decoded) 
+		jwt.verify(token, 'superSecret', (err, decoded)=>
 		{      
 			if (err) 
 			{
@@ -83,7 +82,7 @@ var authenticateMiddleware2 = function(req, res, fn)
 	else 
 	{
 		// if there is no token - return an error
-		console.log('ERROR: No token provided.' )
+		// console.log('ERROR: No token provided.' )
 		fn({ 
 			success: false, 
 			message: 'No token provided.',
@@ -91,6 +90,7 @@ var authenticateMiddleware2 = function(req, res, fn)
 		})
 	}
 }
+
 function registerAuthTools(app, express)
 {
 	// get an instance of the router for api routes
@@ -104,7 +104,7 @@ function registerAuthTools(app, express)
 	// route middleware to verify a token
 	apiRoutes.use(authenticateMiddleware)
 
-	apiRoutes.get('/utility1', function(req, res) 
+	apiRoutes.get('/utility1', (req, res)=>
 	{
 		res.json({
 			success: true,
@@ -117,84 +117,10 @@ function registerAuthTools(app, express)
 
 }
 
-
-
-
 module.exports = {
 	registerAuthTools: registerAuthTools,
-	authenticateHandler: authenticateHandler2,
-	authenticateMiddleware: authenticateMiddleware2,
+	authenticateHandler: authenticateHandler,
+	authenticateMiddleware: authenticateMiddleware,
 }
 
 
-
-
-// function authenticateHandler(req, res)
-// {
-// 	dbutils
-// 	.connect()
-// 	.then(function(db_)
-// 	{
-// 		db = db_
-// 		return user.searchUser(db, req.body.name, req.body.password)
-// 	})
-// 	.then(function(users)
-// 	{
-// 		db.close()
-// 		if(!users || !users.length)
-// 		{
-// 			res.json({ success: false, message: 'Authentication failed. User not found.' })
-// 		}
-// 		else
-// 		{
-// 			var payload = {}
-// 			payload[req.body.name] = req.body.password 
-// 			var token = jwt.sign(payload, 'superSecret')
-// 			// return the information including token as JSON
-// 			res.json({
-// 				success: true,
-// 				message: 'Enjoy your token!',
-// 				token: token
-// 			})
-// 		}
-// 	})
-// 	.catch(function(ex)
-// 	{
-// 		db.close()
-// 		res.json({success: false, message: JSON.stringify(ex)})
-// 	})
-// }
-
-
-// var authenticateMiddleware = function(req, res, next) 
-// {
-// 	// check header or url parameters or post parameters for token
-// 	var token = req.body.token || req.query.token || req.headers['x-access-token']
-
-// 	// decode token
-// 	if (token) 
-// 	{
-// 		// verifies secret and checks exp
-// 		jwt.verify(token, 'superSecret', function(err, decoded) 
-// 		{      
-// 			if (err) 
-// 			{
-// 				return res.json({ success: false, message: 'Failed to authenticate token.' })    
-// 			} 
-// 			else 
-// 			{
-// 				// if everything is good, save to request for use in other routes
-// 				req.decoded = decoded    
-// 				next && next()
-// 			}
-// 		})
-// 	} 
-// 	else 
-// 	{
-// 		// if there is no token - return an error
-// 		return res.status(403).send({ 
-// 			success: false, 
-// 			message: 'No token provided.' 
-// 		})
-// 	}
-// }

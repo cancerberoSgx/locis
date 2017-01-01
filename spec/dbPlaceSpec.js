@@ -25,11 +25,11 @@ describe('', function()
 			// console.timeEnd('remove')
 
 			console.time('add')
-			var COUNT = 100
+			var COUNT = 10, size = 50
 			for (var i = 0; i < COUNT; i++) 
 			{
 				var place = {
-					location: testUtils.randomLocationPoint(1,50,1,50)
+					location: testUtils.randomLocationPoint(1,size,1,size)
 				,	name: 'sample name'+i
 				,	description: 'sample description'+i
 				,	category: 'sample category'
@@ -44,9 +44,9 @@ describe('', function()
 				type: "Polygon",
 				coordinates: [[
 					[0, 0],
-					[0, 51],
-					[51, 51],
-					[51, 0],
+					[0, size+1],
+					[size+1, size+1],
+					[size+1, 0],
 					[0, 0]
 				]]
 			}

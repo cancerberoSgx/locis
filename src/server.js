@@ -1,20 +1,9 @@
 var fs = require('fs')
 var path = require('path')
 
-var getContentType = require('./mime-types').getFromFilePath
-
 var authentication = require('./authentication')
-
 var util = require('./util')
-// var util.readJSONBody = require('./util').util.readJSONBody
-var jsonResponse = require('./util').jsonResponse
-var parseUrlParameters = require('./util').parseUrlParameters
-
 var api = require('./api')
-	// api.parseApiCall: api.parseApiCall,
-	// api.installApis: api.installApis,
-	// api.getApis: api.getApis
-
 
 // server startup 
 function createServerAndListen(fn)
@@ -40,11 +29,7 @@ function createServerAndListen(fn)
 
 
 
-
 // SERVER STARTUP
-module.exports = {
-	start: startServer
-}
 
 var isProduction = false
 var baseFolder = 'html'
@@ -65,15 +50,15 @@ function startServer(options)
 		{
 			util.readJSONBody(request).then(()=>
 			{
-				// jsonResponse(response, {foo: 'bar'}) ;return;
+				// util.jsonResponse(response, {foo: 'bar'}) ;return;
 				authentication.authenticateHandler(request, response, (data)=>
 				{
-					jsonResponse(response, data, 200)
+					util.jsonResponse(response, data, 200)
 				})
 			})
 			.catch((ex)=>
 			{
-				jsonResponse(response, ex, 304)
+				util.jsonResponse(response, ex, 304)
 			})
 			return;
 		}
@@ -90,12 +75,11 @@ function startServer(options)
 			{
 				if(err)
 				{
-					jsonResponse(response, err, err.status||200)
+					util.jsonResponse(response, err, err.status||200)
 				}
 				else if(!apiCall.action || !api.getApis()[apiCall.action])
 				{
-					// console.log('api NOT found', apiCall)
-					jsonResponse(response, {error: 'api not found'}, 404)
+					util.jsonResponse(response, {error: 'api not found'}, 404)
 				}
 				else
 				{
@@ -121,9 +105,13 @@ function startServer(options)
 			}
 			else
 			{
-				jsonResponse(response, {error: (file.error+'')||'invalid file'}, 404)
+				util.jsonResponse(response, {error: (file.error+'')||'invalid file'}, 404)
 			}
 		}
 	})
+}
 
+
+module.exports = {
+	start: startServer
 }

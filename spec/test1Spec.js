@@ -2,9 +2,9 @@ var request = require('superagent');
 var utils = require('./testUtils')
 
 
-describe('', function()
+describe('basic auth - utility1', function()
 {
-	// var server; 
+	var server; 
 
 	it('server startup', function(cb)
 	{
