@@ -9,6 +9,7 @@ module.exports = {
 		{
 			expect(res).toBe(undefined) 
 			expect(err.toString().indexOf('ECONNREFUSED')!==-1).toBe(true)
+			// console.log('Please make sure you dont have already a server running')
 		}) 
 
 		var spawn = require('child_process').spawn
@@ -20,16 +21,16 @@ module.exports = {
 		})
 		server.stderr.on('data', (data) => 
 		{
-			console.log(`stdout: ${data}`);
+			console.log(`stdout: ${data}`)
 		})
 		//turn it on
 		setTimeout(function()
 		{
 			request.get(url).end(function(err, res)
 			{
-				expect(!!err).toBe(false)
+				expect(err).toBeFalsy()
+				expect(res.text.indexOf('<!DOCTYPE html>')!==-1).toBe(true)
 				cb(null, server)
-				// fn(server)
 			})
 		}, 500) 
 	}

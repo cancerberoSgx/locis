@@ -67,7 +67,8 @@ var authenticateMiddleware = function(req, res, fn)
 				// console.log('Failed to authenticate token.' )
 				return fn({ 
 					success: false, 
-					message: 'Failed to authenticate token.' 
+					message: 'Failed to authenticate token.',
+					status: 401
 				})  
 			} 
 			else 
@@ -87,7 +88,7 @@ var authenticateMiddleware = function(req, res, fn)
 		fn({ 
 			success: false, 
 			message: 'No token provided.',
-			status: 403
+			status: 40
 		})
 	}
 }

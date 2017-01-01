@@ -3,7 +3,7 @@ function jsonResponse(response, obj, status)
 {
 	status = status || 200
 	var s = JSON.stringify(obj)
-	response.writeHead(200, {
+	response.writeHead(status, {
 		'Content-Type': 'application/json', 
 		'Content-Length': s.length
 	})
@@ -41,7 +41,7 @@ function readJSONBody(request)
 function parseUrlParameters(request)
 {
 	var url = request.url
-	var a = url.indexOf('?')
+	var a = url.indexOf('?'), c
 	var result = {}
 	if(a!=-1)
 	{
@@ -49,16 +49,21 @@ function parseUrlParameters(request)
 		a = url.split('&')
 		a.forEach((b) =>
 		{
-			c = b.split('='); 
-			result[c[0]] = c[1]; 
+			c = b.split('=') 
+			result[c[0]] = c[1] 
 		})
 	}
-	return result;
+	return result
 }
 
+
+var path = require('path'), 
+	fs = require('fs'),
+	mimeTypes = require('./mime-types')
 // resolve and read requested file from fs
-function getFile(request, defaultFile)
+function getFile(request, defaultFile, baseFolder)
 {
+		// console.log('getFile', request.url)
 	if(request.url == '/')
 	{
 		request.url = defaultFile
@@ -66,16 +71,18 @@ function getFile(request, defaultFile)
 	try
 	{
 		var filePath = path.join(baseFolder, request.url)
+		// console.log('filePath', filePath)
 		//TODO : security ! compare path.results against basefolder and make sure it is inside !
 		var stat = fs.statSync(filePath)
 		return {
 			stat: stat,
 			path: filePath,
-			contentType: getContentType(filePath)
+			contentType: mimeTypes.getFromFilePath(filePath)
 		}
 	}
 	catch(ex)
 	{
+
 		return {error: ex}
 	}
 }

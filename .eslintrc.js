@@ -4,14 +4,11 @@ module.exports = {
         "commonjs": true,
         "es6": true,
         "jasmine": true,
-        "mongo": true
+        "mongo": true,
+        "node": true
     },
     "extends": "eslint:recommended",
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
         "linebreak-style": [
             "error",
             "unix"

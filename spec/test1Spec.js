@@ -20,14 +20,9 @@ describe('basic auth - utility1', function()
 	{
 		request
 		.post('http://localhost:3000/api/authenticate')
-		// .send({name: 'bad', password: 'user'})
-		.end(function(err, res)
+		.end(function(err)
 		{
-			expect(err).toBeFalsy()
-			if(!err)
-			{
-				expect(res.body.success).toBeFalsy() //bad credentials
-			}
+			expect(err.status).toBe(401)
 			cb()
 		})
 	}) 
@@ -43,11 +38,15 @@ describe('basic auth - utility1', function()
 			{
 				expect(res.body.success).toBeFalsy() //bad credentials
 			}
+			else
+			{
+				expect(err.status).toBe(401)
+			}
 			cb()
 		})
 	}) 
 
-	var goodToken
+	
 
 	it('happypath1', function(cb)
 	{
@@ -103,214 +102,5 @@ describe('basic auth - utility1', function()
 		})
 	})
 })
-
-
-// function readJSONBody(request)
-// {
-// 	return new Promise(function(resolve, reject)
-// 	{
-// 		try 
-// 		{
-// 			var body = []
-// 			request
-// 			.on('data', function(chunk) 
-// 			{
-// 				body.push(chunk)
-// 			})
-// 			.on('end', function() 
-// 			{
-// 				body = Buffer.concat(body).toString()
-// 				request.body = JSON.parse(body)
-// 				resolve(request)
-// 			})
-// 		}
-// 		catch(ex)
-// 		{
-// 			reject(ex)
-// 		}
-// 	})
-	
-// }
-
-
-
-
-
-
-
-// 	it('/api/authenticate w good credentials', function(cb)
-// 	{
-// 		request
-// 		.post('http://localhost:3000/api/authenticate')
-// 		.send({name: 'sgurin', password: 'test123'})
-// 		.end(function(err, res)
-// 		{
-// 			// console.log('SKJSHKJHKJH',err.toString())
-// 			debugger
-// 			expect(!!err).toBe(false)
-// 			expect(res.body.success).toBe(true) 
-// 			expect(res.body.token.length>0).toBe(true) 
-// 			goodToken = res.body.token
-// 			cb()
-// 		})
-// 	}) 
-
-// 	it('/api/authenticate w bad credentials', function(cb)
-// 	{
-// 		request
-// 		.post('http://localhost:3000/api/authenticate')
-// 		.send({name: 'sgurin', password: 'wrongnumber'})
-// 		.end(function(err, res)
-// 		{
-// 			expect(res.body.success).toBe(false) 
-// 			cb()
-// 		})
-// 	}) 
-
-// 	it('/api/utility1 w no token', function(cb)
-// 	{
-// 		request
-// 		.get('http://localhost:3000/api/utility1')
-// 		.end(function(err, res)
-// 		{
-// 			expect(res.body.success).toBe(false)
-// 			cb()
-// 		})
-// 	}) 
-
-// 	it('/api/utility1 w good token', function(cb)
-// 	{
-// 		request
-// 		.get('http://localhost:3000/api/utility1')
-// 		.set('x-access-token', goodToken)
-// 		.end(function(err, res)
-// 		{
-// 			expect(res.body.success).toBe(true) 
-// 			expect(res.body.result).toBeDefined()
-// 			cb()
-// 		})
-// 	}) 
-
-// 	it('/api/utility1 w bad token', function(cb)
-// 	{
-// 		request
-// 		.get('http://localhost:3000/api/utility1')
-// 		.set('x-access-token', 'inventedtoken')
-// 		.end(function(err, res)
-// 		{
-// 			expect(!!err).toBe(false)
-// 			expect(res.body.success).toBe(false)
-// 			cb()
-// 		})
-// 	}) 
-
-
-
-
-
-
-// var co = require('co')
-// it('happy path using co', function(cb)
-// {
-// 	co(function*() 
-// 	{
-// 		var token = yield new Promise(function(resolve, reject)
-// 		{
-// 			request
-// 				.post('http://localhost:3000/api/authenticate')
-// 				.send({name: 'sgurin', password: 'test123'})
-// 				.end(function(err, res)
-// 				{
-// 					err ? reject(err) : resolve(res.body.token)
-// 				})
-// 		})
-
-// 		console.log('token obtained', token)
-
-// 		var result = yield new Promise(function(resolve, reject)
-// 		{
-// 			request
-// 			.get('http://localhost:3000/api/utility1')
-// 			.set('x-access-token', token)
-// 			.end(function(err, res)
-// 			{
-// 				err ? reject(err) : resolve(res.body.result)
-// 			})
-// 		})
-
-// 		// var result = yield request
-// 		// 	.get('http://localhost:3000/api/utility1')
-// 		// 	.set('x-access-token', token)
-// 		// 	.end(function(err, res)
-// 		// 	{
-// 		// 		// err ? reject(err) : resolve(res.body.result)
-// 		// 	})
-
-// 		// console.log('result obtained', result)
-
-// 		expect(result).toBe(123123)
-
-// 		cb()
-// 	})
-// 	.catch(function(err) 
-// 	{
-// 		expect(err).toBe(undefined) 
-// 		console.log(err.stack)
-// 		cb()
-// 	})
-
-// })
-	
-
-// // it('happy path using co', function(cb2)
-// // {
-// // 	co(function*() 
-// // 	{
-// // 		var token = yield function(cb)
-// // 		{
-// // 			request
-// // 				.post('http://localhost:3000/api/authenticate')
-// // 				.send({name: 'sgurin', password: 'test123'})
-// // 				.end(function(err, res)
-// // 				{
-// // 					err ? cb(err) : cb(res.body.token)
-// // 				})
-// // 		}
-
-// // 		console.log('token obtained', token)
-
-// // 		var result = yield function(cb)
-// // 		{
-// // 			request
-// // 			.get('http://localhost:3000/api/utility1')
-// // 			.set('x-access-token', token)
-// // 			.end(function(err, res)
-// // 			{
-// // 				err ? cb(err) : cb(res.body.result)
-// // 			})
-// // 		}
-
-// // 		// var result = yield request
-// // 		// 	.get('http://localhost:3000/api/utility1')
-// // 		// 	.set('x-access-token', token)
-// // 		// 	.end(function(err, res)
-// // 		// 	{
-// // 		// 		// err ? reject(err) : resolve(res.body.result)
-// // 		// 	})
-
-// // 		// console.log('result obtained', result)
-
-// // 		expect(result).toBe(123123)
-
-// // 		cb2()
-// // 	})
-// // 	.catch(function(err) 
-// // 	{
-// // 		expect(err).toBe(undefined) 
-// // 		console.log(err.stack)
-// // 		cb2()
-// // 	})
-
-// // })
 
 

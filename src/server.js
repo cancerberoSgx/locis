@@ -50,7 +50,6 @@ function startServer(options)
 		{
 			util.readJSONBody(request).then(()=>
 			{
-				// util.jsonResponse(response, {foo: 'bar'}) ;return;
 				authentication.authenticateHandler(request, response, (data)=>
 				{
 					util.jsonResponse(response, data, 200)
@@ -58,9 +57,9 @@ function startServer(options)
 			})
 			.catch((ex)=>
 			{
-				util.jsonResponse(response, ex, 304)
+				util.jsonResponse(response, ex, 401)
 			})
-			return;
+			return
 		}
 
 		//then if starts with /api/* it is a api cal that must be authenticated. 
@@ -86,27 +85,25 @@ function startServer(options)
 					api.getApis()[apiCall.action](request, response, apiCall)
 				}
 			})
+			return
 		}
 
 		//then it is a static file
-		if(!apiCall)
-		{
-			var file = util.getFile(request, defaultFile)
+		var file = util.getFile(request, defaultFile, baseFolder)
 			
-			if(!file.error && file.stat.isFile())
-			{
-				response.writeHead(200, {
-					'Content-Type': file.contentType,
-					'Content-Length': file.stat.size
-				})
+		if(!file.error && file.stat.isFile())
+		{
+			response.writeHead(200, {
+				'Content-Type': file.contentType,
+				'Content-Length': file.stat.size
+			})
 
-				var readStream = fs.createReadStream(file.path)
-				readStream.pipe(response)
-			}
-			else
-			{
-				util.jsonResponse(response, {error: (file.error+'')||'invalid file'}, 404)
-			}
+			var readStream = fs.createReadStream(file.path)
+			readStream.pipe(response)
+		}
+		else
+		{
+			util.jsonResponse(response, {error: (file.error+'')||'invalid file'}, 404)
 		}
 	})
 }
