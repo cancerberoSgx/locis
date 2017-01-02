@@ -50,6 +50,7 @@ describe('basic auth - utility1', function()
 
 	it('happypath1', function(cb)
 	{
+		var token
 		new Promise(function(resolve, reject)
 		{
 			//first obtain the token
@@ -62,8 +63,9 @@ describe('basic auth - utility1', function()
 				err ? reject(err) : resolve(res.body.token)
 			})
 		})
-		.then(function(token)
+		.then(function(token_)
 		{
+			token = token_
 			//now make the api call passing the token
 			return new Promise(function(resolve, reject)
 			{
@@ -80,8 +82,29 @@ describe('basic auth - utility1', function()
 		{
 			//we have the api call result :)
 			expect(result).toBe(123123)
+		})
+
+		// call api/sum
+		.then(function()
+		{
+			return new Promise(function(resolve, reject)
+			{
+				request
+				.get('http://localhost:3000/api/sum?a=4&b=5')
+				.set('x-access-token', token)
+				.end(function(err, res)
+				{
+					err ? reject(err) : resolve(res.body.result)
+				})
+			})
+		})
+		.then(function(result)
+		{
+			expect(result).toBe(9)
 			cb()
 		})
+
+
 		.catch(function(err)
 		{
 			console.log('ERROR', err.toString())

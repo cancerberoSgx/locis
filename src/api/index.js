@@ -20,6 +20,7 @@ function parseApiCall(request)
 function installApis()
 {
 	registerApi(require('./utility1'))
+	registerApi(require('./sum'))
 }
 
 function getApis()

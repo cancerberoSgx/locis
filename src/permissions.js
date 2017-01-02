@@ -18,7 +18,7 @@ Note: In authentication we query the user when he provides its credential to gen
 
 function hasReadPermission(userCredentials, api)
 {
-
+	return true;
 }
 
 module.exports = {

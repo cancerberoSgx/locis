@@ -1,11 +1,11 @@
 var util = require('../util')
 module.exports = {
-	name: 'utility1',
+	name: 'sum',
 	handler: (request, response, apiCall)=>
 	{
 		var data = {
 			success: true,
-			result: 123123
+			result: parseInt(apiCall.params.a, 10) + parseInt(apiCall.params.b, 10)
 		}
 		util.jsonResponse(response, data, 200)
 	}

@@ -87,7 +87,7 @@ var authenticateMiddleware = function(req, res, fn)
 	else 
 	{
 		// if there is no token - return an error
-		// console.log('ERROR: No token provided.' )
+		console.log('ERROR: No token provided.' )
 		fn({ 
 			success: false, 
 			message: 'No token provided.',

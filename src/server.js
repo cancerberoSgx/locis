@@ -64,6 +64,7 @@ function startServer(options)
 
 		//then if starts with /api/* it is a api cal that must be authenticated. 
 		var apiCall = api.parseApiCall(request)
+
 		if(apiCall)
 		{
 			request.query = request.query || apiCall.params
@@ -84,14 +85,16 @@ function startServer(options)
 				{
 					try
 					{
-						var name = _.without(Object.keys(result.decoded), ['iat'])[0]
-						apiCall.user = {name: name, password: result.decoded[name]}
-						// console.log(apiCall.user)
+						var name = _.without(_.keys(result.decoded), ['iat'])[0]
+						apiCall.user = {
+							name: name, 
+							password: result.decoded[name]
+						}
 						api.executeApi(request, response, apiCall)
 					}
 					catch(ex)
 					{
-						// console.log('ERRRRR', ex)
+						console.log(ex)
 						util.jsonResponse(response, {message: 'Authorization error'}, 401)
 					}
 				}
