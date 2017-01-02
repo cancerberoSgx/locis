@@ -1,9 +1,13 @@
 // authentication : 
-// https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
+// Uses https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
 
 var jwt = require('jsonwebtoken')
 var dbutils = require('./db')
 var user = require('./db/user')
+
+// internal - token - userid mapping. Used as cache for getting the user given a token. 
+// If a key is removed in this map then the auth middleware will fail. 
+// var tokenUserMap = {}
 
 function authenticateHandler(req, res, fn)
 {
@@ -19,7 +23,6 @@ function authenticateHandler(req, res, fn)
 		db.close()
 		if(!users || !users.length)
 		{
-			// console.log('no users for', req.body.name)
 			fn({ 
 				success: false, 
 				message: 'Authentication failed. User not found.'
@@ -31,7 +34,9 @@ function authenticateHandler(req, res, fn)
 			payload[req.body.name] = req.body.password
 
 			var token = jwt.sign(payload, 'superSecret')
-			// return the information including token as JSON
+
+			// tokenUserMap[token] = user
+
 			fn({
 				success: true,
 				message: 'Enjoy your token!',
@@ -64,7 +69,6 @@ var authenticateMiddleware = function(req, res, fn)
 		{      
 			if (err) 
 			{
-				// console.log('Failed to authenticate token.' )
 				return fn({ 
 					success: false, 
 					message: 'Failed to authenticate token.',
@@ -75,9 +79,8 @@ var authenticateMiddleware = function(req, res, fn)
 			{
 				// if everything is good, save to request for use in other routes
 				req.decoded = decoded
-
-				// console.log('Authentication OK' )
-				return fn()
+				// console.log('decoded', decoded, JSON.stringify(decoded))
+				return fn(null, {decoded: decoded})
 			}
 		})
 	} 
@@ -93,32 +96,7 @@ var authenticateMiddleware = function(req, res, fn)
 	}
 }
 
-function registerAuthTools(app, express)
-{
-	// get an instance of the router for api routes
-	var apiRoutes = express.Router() 
-
-	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
-	apiRoutes.post('/authenticate', authenticateHandler)
-
-	// route middleware to verify a token
-	apiRoutes.use(authenticateMiddleware)
-
-	apiRoutes.get('/utility1', (req, res)=>
-	{
-		res.json({
-			success: true,
-			result: 123123
-		})
-	})
-
-	// apply the routes to our application with the prefix /api
-	app.use('/api', apiRoutes)
-
-}
-
 module.exports = {
-	registerAuthTools: registerAuthTools,
 	authenticateHandler: authenticateHandler,
 	authenticateMiddleware: authenticateMiddleware,
 }

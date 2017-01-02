@@ -17,7 +17,7 @@ describe('', function()
 
 			yield userdb.insertUser(db, user)
 
-			var result = yield usergroups.getGroupsOfUser(db, user._id)
+			var result = yield usergroups.getUsersGroups(db, user._id)
 			expect(result.length).toBe(0)
 
 			var group1 = {
@@ -27,11 +27,11 @@ describe('', function()
 			}
 			usergroups.insert(db, group1)
 
-			result = yield usergroups.getGroupsOfUser(db, user._id)
+			result = yield usergroups.getUsersGroups(db, user._id)
 			expect(result.length).toBe(0)
 
 			yield usergroups.addUsersToGroups(db, [user._id], [group1._id])
-			result = yield usergroups.getGroupsOfUser(db, user._id)
+			result = yield usergroups.getUsersGroups(db, user._id)
 			expect(result.length).toBe(1)
 
 			db.close()

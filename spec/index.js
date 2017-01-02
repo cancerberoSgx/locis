@@ -1,13 +1,4 @@
-/*
-this test will verify the development tools in the current workspace
-
-#Usage
-
-	node gulp/specs
-*/
-
-var _ = require('underscore')
-,	path = require('path')
+var path = require('path')
 ,	Jasmine = require('jasmine')
 ,	args = require('yargs').argv
 

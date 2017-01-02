@@ -3,6 +3,7 @@ var fs = require('fs')
 var authentication = require('./authentication')
 var util = require('./util')
 var api = require('./api')
+var _ = require('underscore')
 
 // server startup 
 function createServerAndListen(fn)
@@ -69,7 +70,7 @@ function startServer(options)
 			request.body =request.body ||{}
 			request.headers =request.headers ||{}
 
-			authentication.authenticateMiddleware(request, response, (err)=>
+			authentication.authenticateMiddleware(request, response, (err, result)=>
 			{
 				if(err)
 				{
@@ -81,7 +82,18 @@ function startServer(options)
 				}
 				else
 				{
-					api.executeApi(request, response, apiCall)
+					try
+					{
+						var name = _.without(Object.keys(result.decoded), ['iat'])[0]
+						apiCall.user = {name: name, password: result.decoded[name]}
+						// console.log(apiCall.user)
+						api.executeApi(request, response, apiCall)
+					}
+					catch(ex)
+					{
+						// console.log('ERRRRR', ex)
+						util.jsonResponse(response, {message: 'Authorization error'}, 401)
+					}
 				}
 			})
 			return

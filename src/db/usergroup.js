@@ -1,7 +1,7 @@
 var assert = require('assert')
 var _ = require('underscore')
 
-var getGroupsOfUser = function(db, userId, callback)
+var getUsersGroups = function(db, userId, callback)
 {
 	return new Promise((resolve, reject)=>
 	{
@@ -87,7 +87,7 @@ var removeUserGroup = function(db, userId, callback)
 }
 
 module.exports = {
-	getGroupsOfUser: getGroupsOfUser,
+	getUsersGroups: getUsersGroups,
 	insert: insert,
 	removeUserGroup: removeUserGroup,
 	addUsersToGroups: addUsersToGroups,
