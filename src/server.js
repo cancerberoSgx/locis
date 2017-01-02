@@ -1,5 +1,4 @@
 var fs = require('fs')
-var path = require('path')
 
 var authentication = require('./authentication')
 var util = require('./util')
@@ -74,7 +73,7 @@ function startServer(options)
 			{
 				if(err)
 				{
-					util.jsonResponse(response, err, err.status||200)
+					util.jsonResponse(response, err, err.status || 200)
 				}
 				else if(!apiCall.action || !api.getApis()[apiCall.action])
 				{
@@ -82,7 +81,7 @@ function startServer(options)
 				}
 				else
 				{
-					api.getApis()[apiCall.action](request, response, apiCall)
+					api.executeApi(request, response, apiCall)
 				}
 			})
 			return

@@ -54,7 +54,6 @@ var searchWithin = function(db, geometry)
 
 var removeAll = function(db)
 {
-	var result
 	db.collection('places').deleteMany({})
 }
 

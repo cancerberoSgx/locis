@@ -32,9 +32,14 @@ function registerApi(obj)
 	apis[obj.name] = obj.handler
 }
 
+function executeApi(request, response, apiCall)
+{
+	getApis()[apiCall.action](request, response, apiCall)
+}
 module.exports = {
 	parseApiCall: parseApiCall,
 	installApis: installApis,
 	getApis: getApis,
-	registerApi: registerApi
+	registerApi: registerApi,
+	executeApi: executeApi
 }
