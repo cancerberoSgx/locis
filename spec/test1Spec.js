@@ -74,6 +74,7 @@ describe('basic auth - utility1', function()
 				.set('x-access-token', token)
 				.end(function(err, res)
 				{
+					// console.log(err)
 					err ? reject(err) : resolve(res.body.result)
 				})
 			})

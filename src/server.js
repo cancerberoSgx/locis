@@ -75,28 +75,26 @@ function startServer(options)
 			{
 				if(err)
 				{
-					util.jsonResponse(response, err, err.status || 200)
+					return util.jsonResponse(response, err, err.status || 401)
 				}
-				else if(!apiCall.action || !api.getApis()[apiCall.action])
+
+				try
 				{
-					util.jsonResponse(response, {error: 'api not found'}, 404)
+					var name = _.without(_.keys(result.decoded), ['iat'])[0] // iat (issued at) see https://github.com/auth0/node-jsonwebtoken/issues/290#issuecomment-269989752
+					apiCall.user = {
+						name: name, 
+						password: result.decoded[name]
+					}
+					var error = api.executeApi(request, response, apiCall)
+					if(error)
+					{
+						util.jsonResponse(response, error, error.status||404)
+					}
 				}
-				else
+				catch(ex)
 				{
-					try
-					{
-						var name = _.without(_.keys(result.decoded), ['iat'])[0]
-						apiCall.user = {
-							name: name, 
-							password: result.decoded[name]
-						}
-						api.executeApi(request, response, apiCall)
-					}
-					catch(ex)
-					{
-						console.log(ex)
-						util.jsonResponse(response, {message: 'Authorization error'}, 401)
-					}
+					console.log('SERVER ERROR: ', ex)
+					util.jsonResponse(response, {message: 'Authorization error'}, ex.status || 401)
 				}
 			})
 			return

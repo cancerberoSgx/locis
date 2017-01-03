@@ -34,14 +34,14 @@ function authenticateHandler(req, res, fn)
 			payload[req.body.name] = req.body.password
 
 			var token = jwt.sign(payload, 'superSecret')
-
-			// tokenUserMap[token] = user
+			
+			//TODO: what if users.length>1 ? 
 
 			fn({
 				success: true,
 				message: 'Enjoy your token!',
 				token: token,
-				user: user
+				user: users[0]
 			})
 		}
 	})

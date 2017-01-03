@@ -1,5 +1,7 @@
 var request = require('superagent')
 var _ = require('underscore')
+var co = require('co')
+
 module.exports = {
 
 	serverStartup: function(url, expect, cb)
@@ -17,11 +19,11 @@ module.exports = {
 
 		server.stdout.on('data', (data) => 
 		{
-			console.log(`stdout: ${data}`)
+			console.log(`server stdout: ${data}`)
 		})
 		server.stderr.on('data', (data) => 
 		{
-			console.log(`stdout: ${data}`)
+			console.log(`server stderr: ${data}`)
 		})
 		//turn it on
 		setTimeout(function()
@@ -57,12 +59,51 @@ module.exports = {
 		]
 	}
 
-,	coCatch: function(cb)
+,	request: function(method, url, params, headers)
+	{
+		params = params || {}
+		headers = headers || {}
+		return new Promise(function(resolve, reject)
+		{
+			//first obtain the token
+			var req = request[method](url)
+
+			req.send(params)
+
+			_.each(headers, (val, name) =>
+			{
+				req.set(name, val)
+			})
+
+			req.end(function(err, res)
+			{
+				var result = {error: err, response: res}
+				resolve(result)
+				// err ? reject(err) : resolve(res)
+			})
+		})
+	}
+
+
+
+	//a jasmine it() that supports co()
+,	itco: function(label, fn)
+	{
+		it(label, (cb) =>
+		{
+			co(fn.apply(this, [cb]))
+			.catch(this.coCatch(cb, label))
+		})
+	}
+		
+
+,	coCatch: function(cb, message)
 	{
 		return function(err)
 		{
-			expect(err).toBe(undefined)
-			console.log('DB connection ERROR: ', err)
+			// expect(message).toBeFalsy()
+			expect('Error ' + message + '. Cause: ' + err + '').toBeFalsy()
+			console.log('\nSpec EXCEPTION: '+message+'\n\n', err)
 			cb()
 		}
 	}

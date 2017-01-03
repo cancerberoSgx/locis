@@ -44,7 +44,20 @@ var removeUser = function(db, userId, callback)
 {
 	return new Promise((resolve, reject)=>
 	{
-		db.collection('users').deleteMany({ "_id": userId},	(err, results) =>
+		db.collection('users').deleteMany({_id: userId}, (err, results) =>
+		{
+			err ? reject(err) : resolve(results) 
+			callback && callback(err, results)
+		})
+	})
+}
+
+
+var removeUsers = function(db, name, password, callback)
+{
+	return new Promise((resolve, reject)=>
+	{
+		db.collection('users').deleteMany({name: name, password: password}, (err, results) =>
 		{
 			err ? reject(err) : resolve(results) 
 			callback && callback(err, results)
@@ -55,5 +68,6 @@ var removeUser = function(db, userId, callback)
 module.exports = {
 	searchUser: searchUser,
 	insertUser: insertUser,
-	removeUser: removeUser
+	removeUser: removeUser,
+	removeUsers: removeUsers
 }

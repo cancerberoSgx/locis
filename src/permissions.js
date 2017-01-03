@@ -5,7 +5,7 @@ Permissions are very simplistic. We have the concepts of User and UserGroup.
 
 Then any Permissable resource / document must support the following properties: 
 	
-	userRead, userWrite, userAdmin, userGroupRead, userGroupWrite, UserGroupAdmin
+	userRead, userWrite, userGroupRead, userGroupWrite
 
 These properties are arrays of _ids of the entities. 
 

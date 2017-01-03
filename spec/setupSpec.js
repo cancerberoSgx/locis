@@ -25,7 +25,20 @@ describe('setup', function()
 			{
 				// console.log('user dont exists, creating it now.')
 				return user
-				.insertUser(db, {name: 'sgurin', password: 'test123'})
+				.insertUser(db, {
+					name: 'sgurin', 
+					password: 'test123',
+					roles: ['administrator']
+				})
+				.then(function()
+				{
+					return user
+					.insertUser(db, {
+						name: 'noroles', 
+						password: 'test123',
+						roles: []
+					})
+				})
 				.then(function()
 				{
 					return user.searchUser(db, 'sgurin', 'test123')
