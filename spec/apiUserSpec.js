@@ -32,7 +32,7 @@ describe('api user', function()
 		yield user.insertUser(db, {
 			name: 'noadminuser', 
 			password: 'test123',
-			roles: ['administrator']
+			roles: []
 		})
 		var result = yield user.searchUser(db, 'adminuser', 'test123')
 		adminUser = result[0]
@@ -55,6 +55,7 @@ describe('api user', function()
 
 		response = yield utils.request('get', 'http://localhost:3000/api/user', {}, {'x-access-token': token})
 		expect(!!response.error).toBe(false)
+		// console.log(response.response.body)
 
 		response = yield utils.request('post', 'http://localhost:3000/api/authenticate', {name: 'noadminuser', password: 'test123'})
 		expect(token != response.response.body.token).toBe(true)
@@ -63,9 +64,8 @@ describe('api user', function()
 
 
 		response = yield utils.request('get', 'http://localhost:3000/api/user', {}, {'x-access-token': token})
-		// expect(!!response.error).toBe(true)
-
-		// console.log(response.body)
+		expect(!!response.error).toBe(true)
+		expect(response.response.status).toBe(401)
 
 		cb()
 	})

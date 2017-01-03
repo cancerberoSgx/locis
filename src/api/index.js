@@ -34,6 +34,7 @@ function registerApi(obj)
 	apis[obj.name] = obj
 }
 
+var httpsMethods = ['get', 'post', 'put', 'delete', 'head']
 // api dispatcher. 
 function executeApi(request, response, apiCall, done)
 {
@@ -41,12 +42,16 @@ function executeApi(request, response, apiCall, done)
 	{
 		return {
 			error: 'api not found', 
-			status: 404
+			status: 403 //Forbidden
 		}
 	}
 	createApiCallSession(apiCall).then(()=>
 	{
-		var result = getApis()[apiCall.action].handler[request.method.toLowerCase()](request, response, apiCall)
+		var method = request.method.toLowerCase()
+
+		// httpsMethods
+
+		var result = getApis()[apiCall.action].handler[method](request, response, apiCall)
 		done && done(null, apiCall, result)
 	})
 	.catch((ex)=>
@@ -74,7 +79,8 @@ function createApiCallSession(apiCall)
 		{
 			db.close()
 			//TODO: what if user.length>1 ?
-			Object.assign(apiCall, users[0])
+			apiCall.originalUser = apiCall.user
+			apiCall.user = users[0] // throws an exeption if not found
 			resolve(apiCall)
 		})
 		.catch((ex)=>
