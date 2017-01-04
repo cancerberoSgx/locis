@@ -38,23 +38,20 @@ module.exports = {
 					{
 						db.close()
 					}
-					reject(ex)
+					util.jsonResponse(response, {'message': ex+'\n\n'+ex.stack}, 500)
 				})
 			}
 		},
 		post: (request, response, apiCall)=>
 		{
-			
 			util.jsonResponse(response, {}, 200)
 		},
 		put: (request, response, apiCall)=>
 		{
-			
 			util.jsonResponse(response, {}, 200)
 		},
 		delete: (request, response, apiCall)=>
 		{
-			
 			util.jsonResponse(response, {}, 200)
 		}
 	}

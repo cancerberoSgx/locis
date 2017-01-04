@@ -34,25 +34,29 @@ function registerApi(obj)
 	apis[obj.name] = obj
 }
 
-var httpsMethods = ['get', 'post', 'put', 'delete', 'head']
-// api dispatcher. 
+
+// api dispatcher - from here the api take control 
 function executeApi(request, response, apiCall, done)
 {
 	if(!apiCall.action  || !getApis()[apiCall.action] || !getApis()[apiCall.action].handler[request.method.toLowerCase()])
 	{
-		return {
-			error: 'api not found', 
-			status: 403 //Forbidden
-		}
+		util.jsonResponse(response, {error: 'api not found'}, 403)
+		return 
 	}
 	createApiCallSession(apiCall).then(()=>
 	{
 		var method = request.method.toLowerCase()
+		var handler = getApis()[apiCall.action].handler[method]
+		if(!handler)
+		{
+			util.jsonResponse(response, {'message': 'Method not allowed for this api'}, 405)
+		}
+		else
+		{
+			handler(request, response, apiCall)
 
-		// httpsMethods
-
-		var result = getApis()[apiCall.action].handler[method](request, response, apiCall)
-		done && done(null, apiCall, result)
+		}
+		done && done(null, apiCall)
 	})
 	.catch((ex)=>
 	{
@@ -92,13 +96,12 @@ function createApiCallSession(apiCall)
 			reject(ex)
 		})
 	})
-
 }
 
 module.exports = {
 	parseApiCall: parseApiCall,
 	installApis: installApis,
-	getApis: getApis,
+	// getApis: getApis,
 	registerApi: registerApi,
 	executeApi: executeApi
 }

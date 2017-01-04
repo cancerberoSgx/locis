@@ -95,16 +95,32 @@ describe('basic auth - utility1', function()
 				.set('x-access-token', token)
 				.end(function(err, res)
 				{
-					err ? reject(err) : resolve(res.body.result)
+					resolve(res.body.result)
+					expect(res.body.result).toBe(9)
 				})
 			})
 		})
-		.then(function(result)
+
+		// call api with non defined http method
+		.then(function()
 		{
-			expect(result).toBe(9)
-			cb()
+			return new Promise(function(resolve, reject)
+			{
+				request
+				.put('http://localhost:3000/api/sum?a=4&b=5')
+				.set('x-access-token', token)
+				.end(function(err, res)
+				{
+					expect(err.status).toBe(403)
+					cb()
+				})
+			})
 		})
 
+		.then(function()
+		{
+			cb()
+		})
 
 		.catch(function(err)
 		{

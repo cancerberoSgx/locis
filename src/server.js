@@ -85,11 +85,12 @@ function startServer(options)
 						name: name, 
 						password: result.decoded[name]
 					}
-					var error = api.executeApi(request, response, apiCall)
-					if(error)
-					{
-						util.jsonResponse(response, error, error.status||404)
-					}
+					api.executeApi(request, response, apiCall)
+					// var error = api.executeApi(request, response, apiCall)
+					// if(error)
+					// {
+					// 	util.jsonResponse(response, error, error.status||404)
+					// }
 				}
 				catch(ex)
 				{
