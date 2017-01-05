@@ -36,32 +36,47 @@ function registerApi(obj)
 
 
 // api dispatcher - from here the api take control 
-function executeApi(request, response, apiCall, done)
+function executeApi(request, response, apiCall)
 {
-	if(!apiCall.action  || !getApis()[apiCall.action] || !getApis()[apiCall.action].handler[request.method.toLowerCase()])
+	return new Promise((resolve, reject)=>
 	{
-		util.jsonResponse(response, {error: 'api not found'}, 403)
-		return 
-	}
-	createApiCallSession(apiCall).then(()=>
-	{
-		var method = request.method.toLowerCase()
-		var handler = getApis()[apiCall.action].handler[method]
-		if(!handler)
+		if(!apiCall.action  || !getApis()[apiCall.action] || !getApis()[apiCall.action].handler[request.method.toLowerCase()])
 		{
-			util.jsonResponse(response, {'message': 'Method not allowed for this api'}, 405)
+			reject({error: 'api not found', status: 403})
+			util.jsonResponse(response, {error: 'api not found'}, 403)
+			// return 
 		}
-		else
+		createApiCallSession(apiCall).then(()=>
 		{
-			handler(request, response, apiCall)
-
-		}
-		done && done(null, apiCall)
-	})
-	.catch((ex)=>
-	{
-		console.log(ex, ex.stack) // TODO: we are the dispatcher, we are respondible of handinglng it here.
-		done && done(ex)
+			var method = request.method.toLowerCase()
+			var handler = getApis()[apiCall.action].handler[method]
+			if(!handler)
+			{
+				reject({'message': 'Method not allowed for this api', status: 405})
+				// util.jsonResponse(response, {'message': 'Method not allowed for this api'}, 405)
+			}
+			else
+			{
+				try
+				{
+					var result = handler(request, response, apiCall)
+					resolve(result)
+				}
+				catch(ex)
+				{
+					ex.status = 500
+					reject(ex)
+				}
+			}
+		})
+		.catch((ex)=>
+		{
+			// console.log(ex, ex.stack) // TODO: we are the dispatcher, we are respondible of handinglng it here.
+			// done && done(ex)
+			// throw ex
+			ex.status = ex.status || 500
+			reject(ex)
+		})
 	})
 }
 

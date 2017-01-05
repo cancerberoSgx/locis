@@ -61,39 +61,46 @@ function authenticateHandler(req, res, fn)
 
 var authenticateMiddleware = function(req, res, fn)
 {
-	var token = req.body.token || req.query.token || req.headers['x-access-token']
-	if (token) 
+	return new Promise((resolve, reject) =>
 	{
-		// verifies secret and checks exp
-		jwt.verify(token, 'superSecret', (err, decoded)=>
-		{      
-			if (err) 
+		var token = req.body.token || req.query.token || req.headers['x-access-token']
+		if (token) 
+		{
+			// verifies secret and checks exp
+			jwt.verify(token, 'superSecret', (err, decoded)=>
 			{
-				return fn({ 
-					success: false, 
-					message: 'Failed to authenticate token.',
-					status: 401
-				})  
-			} 
-			else 
-			{
-				// if everything is good, save to request for use in other routes
-				req.decoded = decoded
-				// console.log('decoded', decoded, JSON.stringify(decoded))
-				return fn(null, {decoded: decoded})
+				if (err) 
+				{
+					var result = { 
+						success: false, 
+						message: 'Failed to authenticate token.',
+						status: 401
+					}
+					fn && fn(result)
+					reject(result)
+				} 
+				else 
+				{
+					// if everything is good, save to request for use in other routes
+					req.decoded = decoded
+					fn && fn(null, {decoded: decoded})
+					resolve({decoded: decoded})
+				}
+			})
+		} 
+		else 
+		{
+			// if there is no token - return an error
+			console.log('ERROR: No token provided.' )
+			var result = { 
+				success: false, 
+				message: 'No token provided.',
+				status: 40
 			}
-		})
-	} 
-	else 
-	{
-		// if there is no token - return an error
-		console.log('ERROR: No token provided.' )
-		fn({ 
-			success: false, 
-			message: 'No token provided.',
-			status: 40
-		})
-	}
+			fn && fn(result)
+			reject(result)
+		}
+	})
 }
 
 module.exports = {

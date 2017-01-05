@@ -84,6 +84,7 @@ describe('basic auth - utility1', function()
 		{
 			//we have the api call result :)
 			expect(result).toBe(123123)
+			return new Promise((resolve)=>{resolve()})
 		})
 
 		// call api/sum
@@ -99,6 +100,7 @@ describe('basic auth - utility1', function()
 				{
 					resolve(res.body.result)
 					expect(res.body.result).toBe(9)
+					resolve()
 				})
 			})
 		})
@@ -115,7 +117,25 @@ describe('basic auth - utility1', function()
 				.end(function(err, res)
 				{
 					expect(err.status).toBe(403)
-					cb()
+					resolve()
+				})
+			})
+		})
+
+		// call api that throws an exception - user error
+		.then(function()
+		{
+			return new Promise(function(resolve, reject)
+			{
+				request
+				.get('http://localhost:3000/api/sum?a=4&b=notvalid')
+				.set('x-access-token', token)
+				.send({})
+				.end(function(err, res)
+				{
+					expect(err.status).toBe(500)
+					expect(res.body.error.indexOf('Invalid call, a or b are invalid numbers')!==-1).toBe(true)
+					resolve()
 				})
 			})
 		})
