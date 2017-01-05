@@ -72,6 +72,7 @@ describe('basic auth - utility1', function()
 				request
 				.get('http://localhost:3000/api/utility1')
 				.set('x-access-token', token)
+				.send({})
 				.end(function(err, res)
 				{
 					// console.log(err)
@@ -93,6 +94,7 @@ describe('basic auth - utility1', function()
 				request
 				.get('http://localhost:3000/api/sum?a=4&b=5')
 				.set('x-access-token', token)
+				.send({})
 				.end(function(err, res)
 				{
 					resolve(res.body.result)
@@ -109,6 +111,7 @@ describe('basic auth - utility1', function()
 				request
 				.put('http://localhost:3000/api/sum?a=4&b=5')
 				.set('x-access-token', token)
+				.send({})
 				.end(function(err, res)
 				{
 					expect(err.status).toBe(403)
@@ -124,7 +127,8 @@ describe('basic auth - utility1', function()
 
 		.catch(function(err)
 		{
-			console.log('ERROR', err.toString())
+			expect(err).toBeFalsy()
+			console.log('ERROR test1Spec', err.toString())
 			cb()
 		})
 

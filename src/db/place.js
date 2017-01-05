@@ -16,7 +16,7 @@ var remove = function(db, _id)
 {
 	return new Promise((resolve, reject)=>
 	{
-		db.collection('places').deleteMany({ "_id": _id}, (err, results) =>
+		db.collection('places').deleteMany({_id: _id}, (err, results) =>
 		{
 			err ? reject(err) : resolve(results)
 		})
@@ -59,7 +59,7 @@ var removeAll = function(db)
 
 var initialize = function(db)
 {
-	db.collection('places').createIndex( { location : "2dsphere" , category : -1, name: 1 } )
+	db.collection('places').createIndex( { location : '2dsphere' , category : -1, name: 1 } )
 }
 
 module.exports = {

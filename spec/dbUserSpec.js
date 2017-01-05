@@ -10,7 +10,10 @@ describe('', function()
 		co(function*() 
 		{
 			var db = yield dbutils.connect()
-			var user = {name: 'test'+Date.now(), password: Date.now()}
+			var user = {
+				name: 'test'+Date.now(), 
+				password: Date.now()
+			}
 
 			var result = yield userdb.searchUser(db, user.name, user.password)
 			expect(result.length).toBe(0)

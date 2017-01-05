@@ -47,7 +47,7 @@ function authenticateHandler(req, res, fn)
 	})
 	.catch(function(ex)
 	{
-		console.log(ex)
+		console.log('Authentication exx: ', ex)
 		if(typeof(db)!='undefined')
 		{
 			db.close()

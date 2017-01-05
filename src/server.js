@@ -71,33 +71,40 @@ function startServer(options)
 			request.body =request.body ||{}
 			request.headers =request.headers ||{}
 
-			authentication.authenticateMiddleware(request, response, (err, result)=>
+			//TODO: promise and yield the follwoing nested callbacks
+			util.readJSONBody(request)
+			.then(()=>
 			{
-				if(err)
+				authentication.authenticateMiddleware(request, response, (err, result)=>
 				{
-					return util.jsonResponse(response, err, err.status || 401)
-				}
-
-				try
-				{
-					var name = _.without(_.keys(result.decoded), ['iat'])[0] // iat (issued at) see https://github.com/auth0/node-jsonwebtoken/issues/290#issuecomment-269989752
-					apiCall.user = {
-						name: name, 
-						password: result.decoded[name]
+					if(err)
+					{
+						return util.jsonResponse(response, err, err.status || 401)
 					}
-					api.executeApi(request, response, apiCall)
-					// var error = api.executeApi(request, response, apiCall)
-					// if(error)
-					// {
-					// 	util.jsonResponse(response, error, error.status||404)
-					// }
-				}
-				catch(ex)
-				{
-					console.log('SERVER ERROR: ', ex)
-					util.jsonResponse(response, {message: 'Authorization error'}, ex.status || 401)
-				}
+
+					try
+					{
+						var name = _.without(_.keys(result.decoded), ['iat'])[0] // iat (issued at) see https://github.com/auth0/node-jsonwebtoken/issues/290#issuecomment-269989752
+						apiCall.user = {
+							name: name, 
+							password: result.decoded[name]
+						}
+						api.executeApi(request, response, apiCall)
+					}
+					catch(ex)
+					{
+						console.log('SERVER ERROR: ', ex)
+						util.jsonResponse(response, {message: 'Authorization error'}, ex.status || 401)
+					}
+				})
 			})
+			.catch((err)=>
+			{
+				err = err || {error: 'unknwon error', status: 500}
+				return util.jsonResponse(response, err, err.status || 500)
+			})
+
+			
 			return
 		}
 

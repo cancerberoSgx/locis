@@ -63,6 +63,11 @@ module.exports = {
 	{
 		params = params || {}
 		headers = headers || {}
+		// if(!_.isString(body))
+		// {
+		// 	body = body || ''
+		// 	body = JSON.stringify(body)
+		// }
 		return new Promise(function(resolve, reject)
 		{
 			//first obtain the token
@@ -79,7 +84,6 @@ module.exports = {
 			{
 				var result = {error: err, response: res}
 				resolve(result)
-				// err ? reject(err) : resolve(res)
 			})
 		})
 	}
