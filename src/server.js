@@ -22,8 +22,8 @@ function createServerAndListen(fn)
 	else
 	{
 		server = https.createServer(fn)
-	}
-	server.listen(port)
+	} 
+	server.listen(port, ()=>{console.log('Locis Server started at :'+port)})
 	return server
 }
 

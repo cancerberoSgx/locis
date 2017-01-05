@@ -11,22 +11,12 @@ module.exports = {
 		{
 			expect(res).toBe(undefined) 
 			expect(err.toString().indexOf('ECONNREFUSED')!==-1).toBe(true)
-			// console.log('Please make sure you dont have already a server running')
 		}) 
 
 		var spawn = require('child_process').spawn
 		var server = spawn('node', ['bin/www'])
 
-		server.stdout.on('data', (data) => 
-		{
-			console.log(`server stdout: ${data}`)
-		})
-		server.stderr.on('data', (data) => 
-		{
-			console.log(`server stderr: ${data}`)
-		})
-		//turn it on
-		setTimeout(function()
+		function testServerAfterStart()
 		{
 			request.get(url).end(function(err, res)
 			{
@@ -34,7 +24,19 @@ module.exports = {
 				expect(res.text.indexOf('<!DOCTYPE html>')!==-1).toBe(true)
 				cb(null, server)
 			})
-		}, 500) 
+		}
+		server.stdout.on('data', (data) => 
+		{
+			if(data.indexOf('Locis Server started at')!==-1)
+			{
+				testServerAfterStart()
+			}
+			console.log(`server stdout: ${data}`)
+		})
+		server.stderr.on('data', (data) => 
+		{
+			console.log(`server stderr: ${data}`)
+		})
 	}
 
 ,	serverStop: function(url, expect, server, cb)
@@ -63,11 +65,6 @@ module.exports = {
 	{
 		params = params || {}
 		headers = headers || {}
-		// if(!_.isString(body))
-		// {
-		// 	body = body || ''
-		// 	body = JSON.stringify(body)
-		// }
 		return new Promise(function(resolve, reject)
 		{
 			//first obtain the token
@@ -87,7 +84,6 @@ module.exports = {
 			})
 		})
 	}
-
 
 
 	//a jasmine it() that supports co()
