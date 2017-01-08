@@ -44,7 +44,7 @@ function executeApi(request, response, apiCall)
 		{
 			reject({error: 'api not found', status: 403})
 			util.jsonResponse(response, {error: 'api not found'}, 403)
-			// return 
+			return 
 		}
 		createApiCallSession(apiCall).then(()=>
 		{
@@ -53,7 +53,6 @@ function executeApi(request, response, apiCall)
 			if(!handler)
 			{
 				reject({'message': 'Method not allowed for this api', status: 405})
-				// util.jsonResponse(response, {'message': 'Method not allowed for this api'}, 405)
 			}
 			else
 			{
@@ -71,9 +70,7 @@ function executeApi(request, response, apiCall)
 		})
 		.catch((ex)=>
 		{
-			// console.log(ex, ex.stack) // TODO: we are the dispatcher, we are respondible of handinglng it here.
-			// done && done(ex)
-			// throw ex
+			console.log(ex, ex.stack) // TODO: we are the dispatcher, we are responsible of handinglng it here.
 			ex.status = ex.status || 500
 			reject(ex)
 		})
@@ -94,10 +91,10 @@ function createApiCallSession(apiCall)
 			db = db_
 			return userdb.searchUser(db, apiCall.user.name, apiCall.user.password)
 		})
+		// .catch((ex)=>{console.log('exexex', ex)})
 		.then((users)=>
 		{
 			db.close()
-			//TODO: what if user.length>1 ?
 			apiCall.originalUser = apiCall.user
 			apiCall.user = users[0] // throws an exeption if not found
 			resolve(apiCall)

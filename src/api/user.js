@@ -17,6 +17,7 @@ var coCatch = function(request, response)
 {
 	return (ex)=>
 	{
+		// console.log('user api cocatch', ex)
 		if(typeof(db)!='undefined')
 		{
 			db.close()
@@ -25,6 +26,7 @@ var coCatch = function(request, response)
 	}
 }
 
+var db
 module.exports = {
 	name: 'user',
 	handler: {
@@ -34,11 +36,10 @@ module.exports = {
 			{
 				return
 			}
-			var db
 			co(function*()
 			{
 				db = yield dbutils.connect()
-				var users = yield userdb.searchUser(db, apiCall.user.name, apiCall.user.password)
+				var users = yield userdb.searchUser(db, apiCall.params.name, apiCall.params.password)
 				db.close()
 				if(!users.length)
 				{
@@ -61,31 +62,41 @@ module.exports = {
 			var db
 			co(function*()
 			{
+				db = yield dbutils.connect()
+				var user = request.body
+				user.roles = user.roles || []
 
-				// console.log('BODY: ', request.body)	
+				yield userdb.insertUser(db, user)
 
-				// yield userdb.insertUser(db, user)
+				delete user.password
+				util.jsonResponse(response, user, 200)
+			})
+			.catch(coCatch(request, response))
+		},
 
-				// var user = JSON.parse(apiCall.body)
-				// console.log()
-				// db = yield dbutils.connect()
-				// var users = yield userdb.searchUser(db, apiCall.user.name, apiCall.user.password)
-				// db.close()
-				// if(!users.length)
-				// {
-				// 	util.jsonResponse(response, {'message': 'User not found'}, 404)
-				// }
-				// var user = users[0]
-				// delete user.password
-				util.jsonResponse(response, {}, 200)
+		put: (request, response, apiCall)=>
+		{
+			if(!verifyPermissions(request, response, apiCall))
+			{
+				return
+			}
+			co(function*()
+			{
+				db = yield dbutils.connect()
+				var users = yield userdb.updateUser(db, apiCall.user.name, apiCall.user.password)
+				db.close()
+				if(!users.length)
+				{
+					util.jsonResponse(response, {'message': 'User not found'}, 404)
+				}
+				var user = users[0]
+				delete user.password
+				util.jsonResponse(response, user, 200)
 
 			})
 			.catch(coCatch(request, response))
 		},
-		put: (request, response, apiCall)=>
-		{
-			util.jsonResponse(response, {}, 200)
-		},
+
 		delete: (request, response, apiCall)=>
 		{
 			util.jsonResponse(response, {}, 200)

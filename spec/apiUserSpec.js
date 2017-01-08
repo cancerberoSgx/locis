@@ -56,55 +56,69 @@ describe('api user', function()
 		expect(!!token).toBe(true)
 		goodToken = token
 
-		response = yield utils.request('get', 'http://localhost:3000/api/user', {}, {'x-access-token': token})
+		// get existent
+		response = yield utils.request('get', 'http://localhost:3000/api/user', {name: 'noadminuser', password: 'test123'}, {'x-access-token': token})
+		// console.log('LASTTTT', response.response.body)
 		expect(!!response.error).toBe(false)
+		expect(response.response.body.name).toBe('noadminuser')
+		expect(!!response.response.body._id).toBe(true)
 
-		response = yield utils.request('post', 'http://localhost:3000/api/authenticate', {name: 'noadminuser', password: 'test123'})
-		expect(token != response.response.body.token).toBe(true)
-		token = response.response.body.token
-		expect(!!token).toBe(true)
+		// // get non existent
+		// response = yield utils.request('get', 'http://localhost:3000/api/user', {name: 'nonexistent_123', password: 'test123'}, {'x-access-token': token})
+		// expect(!!response.error).toBe(true)
+
+		// response = yield utils.request('post', 'http://localhost:3000/api/authenticate', {name: 'noadminuser', password: 'test123'})
+		// expect(token != response.response.body.token).toBe(true)
+		// token = response.response.body.token
+		// expect(!!token).toBe(true)
 
 
-		response = yield utils.request('get', 'http://localhost:3000/api/user', {}, {'x-access-token': token})
-		expect(!!response.error).toBe(true)
-		expect(response.response.status).toBe(401)
+		// response = yield utils.request('get', 'http://localhost:3000/api/user', {}, {'x-access-token': token})
+		// expect(!!response.error).toBe(true)
+		// expect(response.response.status).toBe(401)
 
 		cb()
 	})
 
-	utils.itco('user post with priviligees', (cb) => function*() 
-	{
-		var response
-		var user = {
-			name: 'test'+Date.now(), 
-			password: Date.now()+''
-		}
-		response = yield utils.request('post', 'http://localhost:3000/api/user', user, {'x-access-token': goodToken})
-		expect(!!response.error).toBe(false)
-		cb()
+	// utils.itco('insert, update & delete user', (cb) => function*() 
+	// {
+	// 	var response
+	// 	var user = {
+	// 		name: 'test'+Date.now(), 
+	// 		password: Date.now()+''
+	// 	}
+	// 	response = yield utils.request('post', 'http://localhost:3000/api/user', user, {'x-access-token': goodToken})
+	// 	expect(!!response.error).toBe(false)
+	// 	expect(!!response.response.body._id).toBe(true)
 
-		// var request = require('superagent')
-		// request.post('http://localhost:3000/api/user')
-		// 	.set('Content-Type', 'application/json')
-		// 	.set('x-access-token', goodToken)
-		// 	.send(JSON.stringify(user))
-		// 	.end(function(err, res)
-		// 	{
-		// 		if (err || !res.ok) 
-		// 		{
-		// 			console.log('Oh no! error')
-		// 			console.log(_.keys(res), res.body)//response.response.params)
-		// 		} 
-		// 		else 
-		// 		{
-		// 			console.log('yay got ' + JSON.stringify(res.body))
-		// 		}
-		// 		cb()
-		// 	})
+	// 	response = yield utils.request('post', 'http://localhost:3000/api/user', {name: user.name, password: user.pasword}, {'x-access-token': goodToken})
+	// 	expect(!!response.error).toBe(false)
+	// 	expect(response.response.body.name).toBe(user.name)
+
+	// 	cb()
+
+	// 	// var request = require('superagent')
+	// 	// request.post('http://localhost:3000/api/user')
+	// 	// 	.set('Content-Type', 'application/json')
+	// 	// 	.set('x-access-token', goodToken)
+	// 	// 	.send(JSON.stringify(user))
+	// 	// 	.end(function(err, res)
+	// 	// 	{
+	// 	// 		if (err || !res.ok) 
+	// 	// 		{
+	// 	// 			console.log('Oh no! error')
+	// 	// 			console.log(_.keys(res), res.body)//response.response.params)
+	// 	// 		} 
+	// 	// 		else 
+	// 	// 		{
+	// 	// 			console.log('yay got ' + JSON.stringify(res.body))
+	// 	// 		}
+	// 	// 		cb()
+	// 	// 	})
 
 
 		
-	})
+	// })
 
 
 

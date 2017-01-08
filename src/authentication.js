@@ -81,10 +81,12 @@ var authenticateMiddleware = function(req, res, fn)
 				} 
 				else 
 				{
+					var result = {decoded: decoded}
 					// if everything is good, save to request for use in other routes
 					req.decoded = decoded
-					fn && fn(null, {decoded: decoded})
-					resolve({decoded: decoded})
+					// console.log('DECODED1', result)
+					resolve(result)
+					fn && fn(null, result)
 				}
 			})
 		} 

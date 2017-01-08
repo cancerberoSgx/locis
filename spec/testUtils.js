@@ -1,11 +1,16 @@
 var request = require('superagent')
 var _ = require('underscore')
 var co = require('co')
+var args = require('yargs').argv
 
 module.exports = {
 
 	serverStartup: function(url, expect, cb)
 	{
+		if(args.dontRunServer)
+		{
+			return cb(null)
+		}
 		//make sure is turned off
 		request.get(url).end(function(err, res)
 		{
@@ -41,6 +46,10 @@ module.exports = {
 
 ,	serverStop: function(url, expect, server, cb)
 	{
+		if(args.dontRunServer)
+		{
+			return cb(null)
+		}
 		server.kill() 
 		setTimeout(function()
 		{
@@ -70,12 +79,20 @@ module.exports = {
 			//first obtain the token
 			var req = request[method](url)
 
-			req.send(params)
-
 			_.each(headers, (val, name) =>
 			{
 				req.set(name, val)
 			})
+
+			if(method.toLowerCase()=='post')
+			{
+				req.send(params)
+			}
+			else
+			{
+				req.query(params)
+				req.send({})
+			}
 
 			req.end(function(err, res)
 			{
@@ -101,7 +118,6 @@ module.exports = {
 	{
 		return function(err)
 		{
-			// expect(message).toBeFalsy()
 			expect('Error ' + message + '. Cause: ' + err + '').toBeFalsy()
 			console.log('\nSpec EXCEPTION: '+message+'\n\n', err)
 			cb()

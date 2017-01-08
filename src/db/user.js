@@ -27,6 +27,26 @@ var searchUser = function(db, name, password, callback)
 	})
 }
 
+var updateUser = function(db, data, callback)
+{
+	return new Promise((resolve, reject)=>
+	{
+		db.collection('users').updateOne(
+			{_id: data.id},
+			{
+				$set: data.user,
+				$currentDate: { lastModified: true }
+			}, 
+			(err, result) =>
+			{
+				assert.equal(err, null)
+				err ? reject(err) : resolve()
+				callback && callback(err)
+			}
+		)
+	})
+}
+
 var insertUser = function(db, user, callback)
 {
 	return new Promise((resolve, reject)=>
@@ -69,5 +89,6 @@ module.exports = {
 	searchUser: searchUser,
 	insertUser: insertUser,
 	removeUser: removeUser,
-	removeUsers: removeUsers
+	removeUsers: removeUsers,
+	updateUser: updateUser
 }

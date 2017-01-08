@@ -65,20 +65,28 @@ function startServer(options)
 		//then if starts with /api/* it is a api cal that must be authenticated. 
 		var apiCall = api.parseApiCall(request)
 
+
 		if(apiCall)
 		{
+
 			request.query = request.query || apiCall.params
 			request.body =request.body ||{}
 			request.headers =request.headers ||{}
 
 			//TODO: promise and yield the follwoing nested callbacks
 			util.readJSONBody(request)
-			.catch((err)=>
+			.catch(()=>
 			{
-				err = err || {error: 'unknwon error', status: 500}
-				util.jsonResponse(response, err, err.status || 500)
+				//cannot parse body - we assume empty object
+				request.body = {}
+				return new Promise((resolve)=>{resolve()})
 			})
-			.then(authentication.authenticateMiddleware(request, response))
+			.then(new Promise((resolve)=>
+			{
+				apiCall.body = request.body
+				resolve()
+			}))
+			.then(()=>{return authentication.authenticateMiddleware(request, response)})
 			.then((result)=>
 			{
 				var name = _.without(_.keys(result.decoded), ['iat'])[0] // iat (issued at) see https://github.com/auth0/node-jsonwebtoken/issues/290#issuecomment-269989752
@@ -94,14 +102,12 @@ function startServer(options)
 				util.jsonResponse(response, err, err.status || 401)
 			})
 			.then(()=>
-			{			
+			{
 				return api.executeApi(request, response, apiCall)
 			})
 			.catch((err)=>
 			{
 				err = err || {error: 'unknwon error', status: 500}
-				// err.message = err.message || err+''
-				// console.log('seba err', err, JSON.stringify(err))
 				util.jsonResponse(response, err, err.status || 500)
 			})
 			return
