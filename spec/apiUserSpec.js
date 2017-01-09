@@ -125,33 +125,15 @@ describe('api user', function()
 			{_id: user._id}, {'x-access-token': goodToken})
 		expect(response.response.body.lastname).toBe('marrero')
 
-		// expect(!!response.response.body).toBe(true)
-		// expect(!!response.response.body._id).toBe(true)
+		response = yield utils.request('delete', 'http://localhost:3000/api/user', 
+			{_id: user._id}, {'x-access-token': goodToken})
+		expect(response.response.body.result.n).toBe(1)
 
-
-		// console.log(response.error)
-		// expect(response.response.body.name).toBe(user.name)
+		response = yield utils.request('get', 'http://localhost:3000/api/user', 
+			{_id: user._id}, {'x-access-token': goodToken})
+		expect(response.response.status).toBe(404)
 
 		cb()
-
-		// var request = require('superagent')
-		// request.post('http://localhost:3000/api/user')
-		// 	.set('Content-Type', 'application/json')
-		// 	.set('x-access-token', goodToken)
-		// 	.send(JSON.stringify(user))
-		// 	.end(function(err, res)
-		// 	{
-		// 		if (err || !res.ok) 
-		// 		{
-		// 			console.log('Oh no! error')
-		// 			console.log(_.keys(res), res.body)//response.response.params)
-		// 		} 
-		// 		else 
-		// 		{
-		// 			console.log('yay got ' + JSON.stringify(res.body))
-		// 		}
-		// 		cb()
-		// 	})
 
 	})
 

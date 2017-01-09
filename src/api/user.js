@@ -27,6 +27,7 @@ var coCatch = function(request, response)
 }
 
 var db
+
 module.exports = {
 	name: 'user',
 	handler: {
@@ -42,13 +43,9 @@ module.exports = {
 				var users
 				var invalidCall = false
 
-				if(apiCall.params.name && apiCall.params.password)
+				if(apiCall.params.name && apiCall.params.password || apiCall.params._id)
 				{
-					users = yield userdb.search(db, {name: apiCall.params.name, password: apiCall.params.password})
-				}
-				else if(apiCall.params._id)
-				{
-					users = yield userdb.getUserById(db, apiCall.params._id)
+					users = yield userdb.search(db, apiCall.params)
 				}
 				else
 				{
@@ -120,7 +117,25 @@ module.exports = {
 
 		delete: (request, response, apiCall)=>
 		{
-			util.jsonResponse(response, {}, 200)
+			if(!verifyPermissions(request, response, apiCall))
+			{
+				return
+			}
+			co(function*()
+			{
+				db = yield dbutils.connect()
+				var _id = apiCall.params._id
+
+				// console.log('_id', _id)
+
+				var result = yield userdb.removeUser(db, _id)
+
+				util.jsonResponse(response, {result}, 200)
+
+				db.close()
+
+			})
+			.catch(coCatch(request, response))
 		}
 	}
 }

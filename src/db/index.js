@@ -3,7 +3,8 @@
 
 var MongoClient = require('mongodb').MongoClient
 
-var reuseDbInstance = true
+var reuseDbInstance = true  //make sure is true for production - if false it will open / close db connection each time
+
 var db //for performance reasons we use always the same db instance and we disable closing it. 
 
 module.exports = {
@@ -23,7 +24,6 @@ module.exports = {
 			{
 				MongoClient.connect(this.url, (err, _db) =>
 				{
-					// try {
 					if(!err)
 					{
 						db = _db
@@ -32,19 +32,15 @@ module.exports = {
 							db.close = function(){}
 						}
 					}
-					// console.log('suginr123', err)
 					if(err)
 					{
 						reject(err)
 					}
 					else
 					{
-						// console.log('connect resolve')
 						resolve(db)
 					}
 					callback && callback(err, db)
-					// !!err ? reject(err) : resolve(db)
-					// }catch(ex){console.log('db index ex', ex)}
 				})
 			}
 			

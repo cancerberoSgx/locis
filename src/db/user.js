@@ -5,6 +5,10 @@ var search = function(db, data, callback)
 {
 	return new Promise((resolve, reject)=>
 	{
+		if(data._id)
+		{
+			data._id = mongodb.ObjectId(data._id)
+		}
 		var cursor = db.collection('users').find(data)
 		var docs = []
 		cursor.each((err, doc) =>
@@ -33,10 +37,10 @@ var searchUser = function(db, name, password, callback)
 	return search(db, {name: name, password:password}, callback)
 }
 
-var getUserById = function(db, _id, callback)
-{
-	return search(db, {_id: mongodb.ObjectId(_id)}, callback)
-}
+// var getUserById = function(db, _id, callback)
+// {
+// 	return search(db, {_id: mongodb.ObjectId(_id)}, callback)
+// }
 
 var updateUser = function(db, data, callback)
 {
@@ -66,7 +70,6 @@ var insertUser = function(db, user, callback)
 	{
 		db.collection('users').insertOne( user, (err, result) =>
 		{
-		// console.log('insertUser', user, !!err)
 			assert.equal(err, null)
 			err ? reject(err) : resolve()
 			callback && callback(err)
@@ -78,7 +81,7 @@ var removeUser = function(db, userId, callback)
 {
 	return new Promise((resolve, reject)=>
 	{
-		db.collection('users').deleteMany({_id: userId}, (err, results) =>
+		db.collection('users').deleteMany({_id: mongodb.ObjectId(userId)}, (err, results) =>
 		{
 			err ? reject(err) : resolve(results) 
 			callback && callback(err, results)
@@ -101,7 +104,7 @@ var removeUsers = function(db, name, password, callback)
 
 module.exports = {
 	searchUser: searchUser,
-	getUserById: getUserById,
+	// getUserById: getUserById,
 	search: search,
 	insertUser: insertUser,
 	removeUser: removeUser,
