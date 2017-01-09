@@ -97,7 +97,8 @@ describe('api user', function()
 	{
 		var user = {
 			name: 'test'+Date.now(), 
-			password: Date.now()+''
+			password: Date.now()+'',
+			lastname: 'gurin'
 		}
 
 		response = yield utils.request('get', 'http://localhost:3000/api/user', 
@@ -112,11 +113,18 @@ describe('api user', function()
 		response = yield utils.request('get', 'http://localhost:3000/api/user', 
 			{name: user.name, password: user.password}, {'x-access-token': goodToken})
 		expect(!!response.error).toBe(false)
+		// console.log(response.response.body)
 
 		user._id = response.response.body._id
+		user.lastname = 'marrero'
 		response = yield utils.request('put', 'http://localhost:3000/api/user', 
 			user, {'x-access-token': goodToken})
 		expect(!!response.error).toBe(false)
+
+		response = yield utils.request('get', 'http://localhost:3000/api/user', 
+			{_id: user._id}, {'x-access-token': goodToken})
+		expect(response.response.body.lastname).toBe('marrero')
+
 		// expect(!!response.response.body).toBe(true)
 		// expect(!!response.response.body._id).toBe(true)
 
