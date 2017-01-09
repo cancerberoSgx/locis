@@ -42,16 +42,18 @@ var updateUser = function(db, data, callback)
 {
 	return new Promise((resolve, reject)=>
 	{
+		var id = mongodb.ObjectId(data._id)
+		delete data._id
 		db.collection('users').updateOne(
-			{_id: data.id},
+			{_id: id},
 			{
-				$set: data.user,
+				$set: data,
 				$currentDate: { lastModified: true }
 			}, 
 			(err, result) =>
 			{
 				assert.equal(err, null)
-				err ? reject(err) : resolve()
+				err ? reject(err) : resolve(result.result)
 				callback && callback(err)
 			}
 		)
@@ -64,6 +66,7 @@ var insertUser = function(db, user, callback)
 	{
 		db.collection('users').insertOne( user, (err, result) =>
 		{
+		// console.log('insertUser', user, !!err)
 			assert.equal(err, null)
 			err ? reject(err) : resolve()
 			callback && callback(err)

@@ -84,7 +84,7 @@ module.exports = {
 				req.set(name, val)
 			})
 
-			if(method.toLowerCase()=='post')
+			if(method.toLowerCase()=='post' || method.toLowerCase()=='put')
 			{
 				req.send(params)
 			}

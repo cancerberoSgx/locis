@@ -101,15 +101,18 @@ module.exports = {
 			co(function*()
 			{
 				db = yield dbutils.connect()
-				var users = yield userdb.updateUser(db, apiCall.user.name, apiCall.user.password)
-				db.close()
-				if(!users.length)
+				var user = request.body
+				user.roles = user.roles || []
+				if(!user || !user._id)
 				{
 					util.jsonResponse(response, {'message': 'User not found'}, 404)
 				}
-				var user = users[0]
-				delete user.password
-				util.jsonResponse(response, user, 200)
+				else
+				{
+					var result = yield userdb.updateUser(db, user)
+					util.jsonResponse(response, result, 200)
+				}
+				db.close()
 
 			})
 			.catch(coCatch(request, response))
