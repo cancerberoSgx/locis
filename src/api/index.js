@@ -22,6 +22,7 @@ function installApis()
 	registerApi(require('./utility1'))
 	registerApi(require('./sum'))
 	registerApi(require('./user'))
+	registerApi(require('./place'))
 }
 
 function getApis()

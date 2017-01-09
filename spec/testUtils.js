@@ -102,6 +102,11 @@ module.exports = {
 		})
 	}
 
+,	getApiUrl: function(api)
+	{
+		return 'http://localhost:3000/api/' + api
+	}
+
 
 	//a jasmine it() that supports co()
 ,	itco: function(label, fn)

@@ -29,8 +29,11 @@ var coCatch = function(request, response)
 var db
 
 module.exports = {
+
 	name: 'user',
+
 	handler: {
+		
 		get: (request, response, apiCall)=>
 		{
 			if(!verifyPermissions(request, response, apiCall))
