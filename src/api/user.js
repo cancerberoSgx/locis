@@ -17,7 +17,7 @@ var coCatch = function(request, response)
 {
 	return (ex)=>
 	{
-		// console.log('user api cocatch', ex)
+		console.log('user api exception', ex)
 		if(typeof(db)!='undefined')
 		{
 			db.close()
@@ -39,11 +39,29 @@ module.exports = {
 			co(function*()
 			{
 				db = yield dbutils.connect()
-				var users = yield userdb.searchUser(db, apiCall.params.name, apiCall.params.password)
+				var users
+				var invalidCall = false
+
+				if(apiCall.params.name && apiCall.params.password)
+				{
+					users = yield userdb.search(db, {name: apiCall.params.name, password: apiCall.params.password})
+				}
+				else if(apiCall.params._id)
+				{
+					users = yield userdb.getUserById(db, apiCall.params._id)
+				}
+				else
+				{
+					invalidCall = true
+				}
 				db.close()
+				if(invalidCall)
+				{
+					return util.jsonResponse(response, {'message': 'Invalid call'}, 500)
+				}
 				if(!users.length)
 				{
-					util.jsonResponse(response, {'message': 'User not found'}, 404)
+					return util.jsonResponse(response, {'message': 'User not found'}, 404)
 				}
 				var user = users[0]
 				delete user.password

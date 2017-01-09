@@ -48,11 +48,12 @@ function startServer(options)
 		//post /authenticate i for obtaining jsonweb token
 		if(request.url=='/api/authenticate')
 		{
-			util.readJSONBody(request).then(()=>
+			util.readJSONBody(request)
+			.then(()=>
 			{
 				authentication.authenticateHandler(request, response, (data)=>
 				{
-					util.jsonResponse(response, data, 200)
+					util.jsonResponse(response, data, data.status||200)
 				})
 			})
 			.catch((ex)=>

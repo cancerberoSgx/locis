@@ -33,15 +33,16 @@ describe('basic auth - utility1', function()
 		.send({name: 'bad', password: 'user'})
 		.end(function(err, res)
 		{
-			expect(err).toBeFalsy()
-			if(!err)
-			{
-				expect(res.body.success).toBeFalsy() //bad credentials
-			}
-			else
-			{
-				expect(err.status).toBe(401)
-			}
+			expect(!!err).toBe(true)
+			// expect(err.status).toBe(401)
+			// if(!err)
+			// {
+			// 	expect(res.body.success).toBeFalsy() //bad credentials
+			// }
+			// else
+			// {
+			// 	expect(err.status).toBe(401)
+			// }
 			cb()
 		})
 	}) 
@@ -59,6 +60,7 @@ describe('basic auth - utility1', function()
 			.send({name: 'sgurin', password: 'test123'})
 			.end(function(err, res)
 			{
+				// console.log(err.status, err+'')
 				expect(err).toBeFalsy()
 				err ? reject(err) : resolve(res.body.token)
 			})

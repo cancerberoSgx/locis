@@ -1,10 +1,11 @@
 var assert = require('assert')
+var mongodb = require('mongodb')
 
-var searchUser = function(db, name, password, callback)
+var search = function(db, data, callback)
 {
 	return new Promise((resolve, reject)=>
 	{
-		var cursor = db.collection('users').find({name: name, password: password})
+		var cursor = db.collection('users').find(data)
 		var docs = []
 		cursor.each((err, doc) =>
 		{
@@ -25,6 +26,16 @@ var searchUser = function(db, name, password, callback)
 			}
 		})
 	})
+}
+
+var searchUser = function(db, name, password, callback)
+{
+	return search(db, {name: name, password:password}, callback)
+}
+
+var getUserById = function(db, _id, callback)
+{
+	return search(db, {_id: mongodb.ObjectId(_id)}, callback)
 }
 
 var updateUser = function(db, data, callback)
@@ -87,6 +98,8 @@ var removeUsers = function(db, name, password, callback)
 
 module.exports = {
 	searchUser: searchUser,
+	getUserById: getUserById,
+	search: search,
 	insertUser: insertUser,
 	removeUser: removeUser,
 	removeUsers: removeUsers,

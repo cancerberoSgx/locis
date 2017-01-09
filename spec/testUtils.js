@@ -118,6 +118,7 @@ module.exports = {
 	{
 		return function(err)
 		{
+			// expect(message).toBeFalsy()
 			expect('Error ' + message + '. Cause: ' + err + '').toBeFalsy()
 			console.log('\nSpec EXCEPTION: '+message+'\n\n', err)
 			cb()

@@ -25,7 +25,8 @@ function authenticateHandler(req, res, fn)
 		{
 			fn({ 
 				success: false, 
-				message: 'Authentication failed. User not found.'
+				message: 'Authentication failed. User not found.',
+				status: 401
 			})
 		}
 		else

@@ -47,35 +47,47 @@ describe('api user', function()
 	})
 
 
-	var goodToken
-	utils.itco('user get with priviligees', (cb) => function*() 
+	var goodToken, badToken
+	utils.itco('user get with priviligees and not so', (cb) => function*() 
 	{
 		var response, token
-		response = yield utils.request('post', 'http://localhost:3000/api/authenticate', {name: 'adminuser', password: 'test123'})
+
+		//authenticate with wrong call
+		response = yield utils.request('post', 'http://localhost:3000/api/authenticate', 
+			{bar: 'adminuser', foo: 'test123'})
+
+		response = yield utils.request('post', 'http://localhost:3000/api/authenticate', 
+			{name: 'adminuser', password: 'test123'})
 		token = response.response.body.token
 		expect(!!token).toBe(true)
 		goodToken = token
 
-		// get existent
-		response = yield utils.request('get', 'http://localhost:3000/api/user', {name: 'noadminuser', password: 'test123'}, {'x-access-token': token})
-		// console.log('LASTTTT', response.response.body)
+		// get existent using user and password
+		response = yield utils.request('get', 'http://localhost:3000/api/user', 
+			{name: 'noadminuser', password: 'test123'}, {'x-access-token': token})
 		expect(!!response.error).toBe(false)
 		expect(response.response.body.name).toBe('noadminuser')
 		expect(!!response.response.body._id).toBe(true)
 
-		// // get non existent
-		// response = yield utils.request('get', 'http://localhost:3000/api/user', {name: 'nonexistent_123', password: 'test123'}, {'x-access-token': token})
-		// expect(!!response.error).toBe(true)
 
-		// response = yield utils.request('post', 'http://localhost:3000/api/authenticate', {name: 'noadminuser', password: 'test123'})
-		// expect(token != response.response.body.token).toBe(true)
-		// token = response.response.body.token
-		// expect(!!token).toBe(true)
+		// get existent by id
+		var existingId = response.response.body._id
+		response = yield utils.request('get', 'http://localhost:3000/api/user', 
+			{_id: existingId}, {'x-access-token': token})
+		expect(!!response.error).toBe(false)
+		expect(response.response.body.name).toBe('noadminuser')
+		expect(response.response.body._id).toBe(existingId)
 
-
-		// response = yield utils.request('get', 'http://localhost:3000/api/user', {}, {'x-access-token': token})
-		// expect(!!response.error).toBe(true)
-		// expect(response.response.status).toBe(401)
+		//get with a non authorized user
+		response = yield utils.request('post', 'http://localhost:3000/api/authenticate', 
+			{name: 'noadminuser', password: 'test123'})
+		token = response.response.body.token
+		expect(!!token).toBe(true)
+		response = yield utils.request('get', 'http://localhost:3000/api/user', 
+			{name: 'noadminuser', password: 'test123'}, {'x-access-token': token})
+		expect(!!response.error).toBe(true)
+		expect(response.error.status).toBe(401)
+		badToken = token
 
 		cb()
 	})
@@ -91,7 +103,8 @@ describe('api user', function()
 	// 	expect(!!response.error).toBe(false)
 	// 	expect(!!response.response.body._id).toBe(true)
 
-	// 	response = yield utils.request('post', 'http://localhost:3000/api/user', {name: user.name, password: user.pasword}, {'x-access-token': goodToken})
+	// 	response = yield utils.request('get', 'http://localhost:3000/api/user', 
+	// 		{name: user.name, password: user.pasword}, {'x-access-token': goodToken})
 	// 	expect(!!response.error).toBe(false)
 	// 	expect(response.response.body.name).toBe(user.name)
 
@@ -116,8 +129,6 @@ describe('api user', function()
 	// 	// 		cb()
 	// 	// 	})
 
-
-		
 	// })
 
 
