@@ -1,27 +1,8 @@
 var assert = require('assert')
 
-var insert = function(db, place)
-{
-	return new Promise((resolve, reject)=>
-	{
-		db.collection('places').insertOne( place, (err, result)=>
-		{
-			assert.equal(err, null)
-			err ? reject(err) : resolve()
-		})
-	})
-}
+var insert = require('./dbutil').insert('places')
 
-var remove = function(db, _id)
-{
-	return new Promise((resolve, reject)=>
-	{
-		db.collection('places').deleteMany({_id: _id}, (err, results) =>
-		{
-			err ? reject(err) : resolve(results)
-		})
-	})
-}
+var deleteMany = require('./dbutil').delete('places')
 
 var searchWithin = function(db, geometry)
 {
@@ -54,7 +35,7 @@ var searchWithin = function(db, geometry)
 
 var removeAll = function(db)
 {
-	db.collection('places').deleteMany({})
+	return deleteMany(db, {})
 }
 
 var initialize = function(db)
@@ -66,6 +47,6 @@ module.exports = {
 	searchWithin: searchWithin,
 	initialize: initialize,
 	insert: insert,
-	remove: remove,
+	remove: deleteMany,
 	removeAll: removeAll
 }

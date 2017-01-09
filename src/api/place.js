@@ -3,15 +3,15 @@ var dbutils = require('../db')
 var placedb = require('../db/place')
 var co = require('co')
 
-var verifyPermissions = (request, response, apiCall)=>
-{
-	// if(!apiCall.user.roles.includes('administrator'))
-	// {
-	// 	util.jsonResponse(response, {'message': 'Not authorized'}, 401)
-	// 	return false
-	// }
-	return true
-}
+// var verifyPermissions = (request, response, apiCall)=>
+// {
+// 	// if(!apiCall.user.roles.includes('administrator'))
+// 	// {
+// 	// 	util.jsonResponse(response, {'message': 'Not authorized'}, 401)
+// 	// 	return false
+// 	// }
+// 	return true
+// }
 
 var coCatch = function(request, response)
 {
@@ -36,39 +36,17 @@ module.exports = {
 
 		get: (request, response, apiCall)=>
 		{
-			// if(!verifyPermissions(request, response, apiCall))
-			// {
-			// 	return
-			// }
-			// co(function*()
-			// {
-			// 	db = yield dbutils.connect()
-			// 	var users
-			// 	var invalidCall = false
-
-			// 	if(apiCall.params.name && apiCall.params.password || apiCall.params._id)
-			// 	{
-			// 		users = yield placedb.search(db, apiCall.params)
-			// 	}
-			// 	else
-			// 	{
-			// 		invalidCall = true
-			// 	}
-			// 	db.close()
-			// 	if(invalidCall)
-			// 	{
-			// 		return util.jsonResponse(response, {'message': 'Invalid call'}, 500)
-			// 	}
-			// 	if(!users.length)
-			// 	{
-			// 		return util.jsonResponse(response, {'message': 'User not found'}, 404)
-			// 	}
-			// 	var user = users[0]
-			// 	delete user.password
-			// 	util.jsonResponse(response, user, 200)
-
-			// })
-			// .catch(coCatch(request, response))
+			//no roles required
+			var db
+			co(function*()
+			{
+				db = yield dbutils.connect()
+				var place = request.body
+				yield placedb.insert(db, place)
+				db.close()
+				util.jsonResponse(response, place, 200)
+			})
+			.catch(coCatch(request, response))
 		},
 
 		post: (request, response, apiCall)=>

@@ -136,8 +136,8 @@ describe('api user', function()
 		var db = yield dbutils.connect()
 		// console.log(adminUser._id)
 
-		yield user.removeUsers(db, 'userplace1', 'test123')
-		yield user.removeUsers(db, 'noadminuser', 'test123')
+		yield user.removeUsers(db, {name: 'userplace1', password: 'test123'})
+		yield user.removeUsers(db, {name: 'noadminuser', password: 'test123'})
 
 		var result = yield user.searchUser(db, 'userplace1', 'test123')
 		expect(result.length).toBe(0)

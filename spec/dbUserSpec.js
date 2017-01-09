@@ -22,7 +22,7 @@ describe('', function()
 			result = yield userdb.searchUser(db, user.name, user.password)
 
 			expect(result.length).toBe(1)
-			yield userdb.removeUser(db, result[0]._id)
+			yield userdb.removeUsers(db, {_id: result[0]._id})
 			result = yield userdb.searchUser(db, user.name, user.password)
 			expect(result.length).toBe(0)
 

@@ -129,9 +129,7 @@ module.exports = {
 				db = yield dbutils.connect()
 				var _id = apiCall.params._id
 
-				// console.log('_id', _id)
-
-				var result = yield userdb.removeUser(db, _id)
+				var result = yield userdb.removeUsers(db, {_id: _id})
 
 				util.jsonResponse(response, {result}, 200)
 
