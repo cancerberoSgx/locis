@@ -23,7 +23,7 @@ function drawMap2() {
 		}
 	}
 	function initialize() {
-		(0, _zepto2.default)('body').append('<div id="map" style="width: 480px; height: 480px;"></div><p>hello</p>');
+		(0, _zepto2.default)('body').append('<div id="map"></div><p>hello4</p>');
 		getLocation(function (position) {
 			var coords = position ? position.coords : { latitude: -25.344, longitude: 131.036 };
 			drawMap(coords);

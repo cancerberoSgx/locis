@@ -20,7 +20,7 @@ function drawMap2()
 	} 
 	function initialize() 
 	{
-		$('body').append('<div id="map" style="width: 480px; height: 480px;"></div><p>hello</p>')
+		$('body').append('<div id="map"></div><p>hello4</p>')
 		getLocation((position)=>
 		{
 			var coords = position?position.coords:{latitude: -25.344, longitude: 131.036}
