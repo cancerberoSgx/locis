@@ -6,12 +6,30 @@ var shell = require('shelljs')
 shell.config.silent = true
 var assert = require('assert')
 
+function execute(cmd)
+{
+	var p = shell.exec(cmd)
+	if(p.code)
+	{
+		console.log('COMMAND ERROR: \n'+cmd+'\n'+p.stderr.toString())
+	}
+	return p
+}
 function compileJavaScript(fn)
 {
 	shell.mkdir('output')
-	assert.equal(shell.exec('babel src -d output').code, 0)
-	var p = shell.exec('browserify output/index.js')
-	assert.equal(p.code, 0)
+	// assert.equal(shell.exec('babel src -d output').code, 0)
+
+	execute('babel src -d output')
+
+	var p = execute('browserify output/index.js')
+	
+	// p = shell.exec('browserify output/index.js')
+	// if(p.code)
+	// {
+	// 	console.log(p.stderr.toString())
+	// }
+	// // assert.equal(p.code, 0)
 	p.to('output/bundle.js')
 	fn && fn()
 }
@@ -75,12 +93,16 @@ function startServer2(options, fn)
 		cert: shell.cat('html/hacksparrow.pem') //fs.readFileSync('cert.pem')
 	};
 
+	var port = 8000
+	
+	console.log('Listening localhost:'+port)
+
 	var a = https.createServer(options, function (req, res) 
 	{
 		res.writeHead(200);
 		res.end("hello world\n");
 	})
-	.listen(8000);
+	.listen(port);
 	fn && fn();
 }
 

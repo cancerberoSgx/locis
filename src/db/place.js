@@ -2,6 +2,8 @@ var assert = require('assert')
 
 var insert = require('./dbutil').insert('places')
 
+var search = require('./dbutil').search('places')
+
 var deleteMany = require('./dbutil').delete('places')
 
 var searchWithin = function(db, geometry)
@@ -48,5 +50,6 @@ module.exports = {
 	initialize: initialize,
 	insert: insert,
 	remove: deleteMany,
-	removeAll: removeAll
+	removeAll: removeAll,
+	search: search
 }

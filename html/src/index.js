@@ -1,8 +1,7 @@
-
 import $ from './lib/zepto'
 import google from './lib/google'
-
-function drawMap()
+ 
+function drawMap2()
 {
 	var poly, map;
 	var markers = [];
@@ -16,17 +15,19 @@ function drawMap()
 		} 
 		else 
 		{
-			fn()
+			fn() 
 		}
-	}
+	} 
 	function initialize() 
 	{
-		$('body').append('<div id="map" style="width: 480; height: 480;"></div>')
+		$('body').append('<div id="map" style="width: 480px; height: 480px;"></div><p>hello</p>')
 		getLocation((position)=>
 		{
 			var coords = position?position.coords:{latitude: -25.344, longitude: 131.036}
 			drawMap(coords)
 		})
+
+		// drawMap({latitude: -25.344, longitude: 131.036})
 	}
 
 	function drawMap(coords)
@@ -80,6 +81,7 @@ function drawMap()
 
 $(document).on('ready', function()
 {
-	drawMap()
+	// console.log('¡draw map')
+	drawMap2()
 })
 // alert($('body').html())

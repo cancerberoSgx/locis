@@ -61,7 +61,6 @@ var update = function(collectionName)
 	}
 }
 
-
 var insert = function(collectionName)
 {
 	return function(db, data, callback)
@@ -77,8 +76,6 @@ var insert = function(collectionName)
 		})
 	}
 }
-
-
 
 var deleteMany = function(collectionName)
 {
@@ -99,9 +96,6 @@ var deleteMany = function(collectionName)
 		})
 	}
 }
-
-
-
 
 
 module.exports = {

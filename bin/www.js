@@ -1,6 +1,7 @@
+var args = require('yargs').argv
 
 var options = {
-	isProduction: false,
+	isProduction: args.production || false,
 	baseFolder: 'html',
 	defaultFile: '/index.html'
 }

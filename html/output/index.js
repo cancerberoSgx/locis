@@ -10,7 +10,7 @@ var _google2 = _interopRequireDefault(_google);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function drawMap() {
+function drawMap2() {
 	var poly, map;
 	var markers = [];
 	var path = new _google2.default.maps.MVCArray();
@@ -23,11 +23,13 @@ function drawMap() {
 		}
 	}
 	function initialize() {
-		(0, _zepto2.default)('body').append('<div id="map" style="width: 480; height: 480;"></div>');
+		(0, _zepto2.default)('body').append('<div id="map" style="width: 480px; height: 480px;"></div><p>hello</p>');
 		getLocation(function (position) {
 			var coords = position ? position.coords : { latitude: -25.344, longitude: 131.036 };
 			drawMap(coords);
 		});
+
+		// drawMap({latitude: -25.344, longitude: 131.036})
 	}
 
 	function drawMap(coords) {
@@ -76,6 +78,7 @@ function drawMap() {
 }
 
 (0, _zepto2.default)(document).on('ready', function () {
-	drawMap();
+	// console.log('¡draw map')
+	drawMap2();
 });
 // alert($('body').html())
